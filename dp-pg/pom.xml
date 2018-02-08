@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.winsafe</groupId>
+		<artifactId>dataplatform-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>dp-pg</artifactId>
+	<name>dp-pg</name>
+	<url>http://maven.apache.org</url>
+	<packaging>war</packaging>
+	<description>宝洁项目</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.winsafe</groupId>
+			<artifactId>dp-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.winsafe</groupId>
+			<artifactId>dp-commonweb</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-juli</artifactId>
+			<version>8.5.14</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>dp-pg</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<overlays>
+						<!-- 上面的overlay覆盖下面的overlay -->
+						<overlay>
+							<!-- groupId为空表示当前的架构 -->
+						</overlay>
+						<overlay>
+							<groupId>com.winsafe</groupId>
+							<artifactId>dp-commonweb</artifactId>
+							<excludes>
+								<exclude>WEB-INF/lib/*.jar</exclude>
+								<exclude>WEB-INF/lib-provided/*.jar</exclude>
+							</excludes>
+						</overlay>
+					</overlays>
+					<excludes>
+						*.*
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<!--使用maven build来运行项目： mvn jetty:run -->
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.4.8.v20171121</version>
+				<configuration>
+					<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
+					<scanIntervalSeconds>3</scanIntervalSeconds>
+					<contextPath>/</contextPath>
+					<!-- <war>${basedir}/target/dataplatform-pg.war</war> -->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

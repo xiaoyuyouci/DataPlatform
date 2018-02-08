@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.winsafe.model.Role" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="creationTime" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="modifier" property="modifier" jdbcType="INTEGER" />
+    <result column="modificationTime" property="modificationTime" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="deletable" property="deletable" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, creator, creationTime, modifier, modificationTime, name, deletable
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from role
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from role
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.winsafe.model.Role" >
+    insert into role (id, creator, creationTime, 
+      modifier, modificationTime, name, deletable
+      )
+    values (#{id,jdbcType=INTEGER}, #{creator,jdbcType=INTEGER}, #{creationTime,jdbcType=TIMESTAMP}, 
+      #{modifier,jdbcType=INTEGER}, #{modificationTime,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
+      #{deletable,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.winsafe.model.Role" >
+    insert into role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="creationTime != null" >
+        creationTime,
+      </if>
+      <if test="modifier != null" >
+        modifier,
+      </if>
+      <if test="modificationTime != null" >
+        modificationTime,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="deletable != null" >
+        deletable,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null" >
+        #{modifier,jdbcType=INTEGER},
+      </if>
+      <if test="modificationTime != null" >
+        #{modificationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="deletable != null" >
+        #{deletable,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.winsafe.model.Role" >
+    update role
+    <set >
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        creationTime = #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null" >
+        modifier = #{modifier,jdbcType=INTEGER},
+      </if>
+      <if test="modificationTime != null" >
+        modificationTime = #{modificationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.winsafe.model.Role" >
+    update role
+    set creator = #{creator,jdbcType=INTEGER},
+      creationTime = #{creationTime,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=INTEGER},
+      modificationTime = #{modificationTime,jdbcType=TIMESTAMP},
+      name = #{name,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+   <select id="selectRoleList" parameterType="Role" resultType="Role">
+	select * from role
+	<where>
+		<if test="id != null"> and id=#{id, jdbcType=INTEGER}</if>
+		<if test="name != null and name !=''"> and name=#{name, jdbcType=VARCHAR}</if>
+		<if test="searchVal != null and searchVal !=''"> and (id like '%${searchVal}%' or name like '%${searchVal}%' )</if>
+	</where>
+  </select>
+  
+  <select id="selectRoleListByUserId" parameterType="java.util.Map" resultType="Role">
+	select * from role
+	<where>
+		<if test="searchVal != null and searchVal !=''"> and (name like '%${searchVal}%' )</if>
+		<if test="userId != null"> and id in (select roleid from userrole ur where ur.userid=#{userId,jdbcType=INTEGER})</if>
+	</where>
+  </select>
+  
+  <select id="selectUnselectedRoleListByUserId" parameterType="java.util.Map" resultType="Role">
+	select * from role
+	<where>
+		<if test="searchVal != null and searchVal !=''"> and (name like '%${searchVal}%' )</if>
+		<if test="userId != null"> and id not in (select roleid from userrole ur where ur.userid=#{userId,jdbcType=INTEGER})</if>
+	</where>
+  </select>
+  
+</mapper>
