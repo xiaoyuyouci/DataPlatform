@@ -22,6 +22,8 @@
 			
 			<div class="panel-body">
 				<table style="width:100%" class="table table-striped table-bordered table-hover" id="table_fcRealtimeGrid">
+					<thead><tr><th></th></tr></thead>
+					<tbody></tbody>
 				</table>
 				<!-- /.table-responsive -->
 			</div>

@@ -15,6 +15,7 @@ import com.winsafe.utils.DatatablePage;
 import com.winsafe.utils.DatatablePageHelper;
 import com.winsafe.utils.DatatableViewPage;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -43,6 +44,33 @@ public class ReportController {
 		record.setSearchVal(dPage.getSearchValue());
 		List list = new ArrayList();
 		JSONObject jsonObject = JSONObject.fromObject(new DatatableViewPage(true, "数据查询成功！", dPage));
+		
+		JSONArray columns = new JSONArray();
+		JSONObject c = new JSONObject();
+		c.put("data", "name");
+		c.put("title", "姓名");
+		columns.add(c);
+		
+		c = new JSONObject();
+		c.put("data", "age");
+		c.put("title", "年龄");
+		columns.add(c);
+		
+		jsonObject.put("columns", columns);
+		
+		JSONArray rows = new JSONArray();
+		c = new JSONObject();
+		c.put("name", "张三");
+		c.put("age", 13);
+		rows.add(c);
+		
+		c = new JSONObject();
+		c.put("name", "李四");
+		c.put("age", 14);
+		rows.add(c);
+		
+		jsonObject.put("rows", rows);
+		
 		AjaxUtil.ajaxReturn(jsonObject, response);
 	}
 }

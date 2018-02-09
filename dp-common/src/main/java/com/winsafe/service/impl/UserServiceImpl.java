@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.winsafe.annotation.DataSourceAnnotation;
 import com.winsafe.dao.UserMapper;
 import com.winsafe.dao.UserRoleMapper;
 import com.winsafe.model.User;
@@ -57,4 +58,5 @@ public class UserServiceImpl implements UserService {
 		userMapper.deleteByPrimaryKey(id);
 		userRoleMapper.deleteByUserId(id);
 	}
+
 }

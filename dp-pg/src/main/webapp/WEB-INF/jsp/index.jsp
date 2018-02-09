@@ -81,11 +81,11 @@
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 我的报表<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a class="hah" href="report/fcRealtimeGrid"> 工厂实时状态</a></li>
-                                <li><a href="#"> 工厂每日状态</a></li>
-                                <li><a href="#"> DC实时状态</a></li>
-                                <li><a href="#"> DC每日状态</a></li>
-                                <li><a href="#"> UID查询</a></li>
-                                <li><a href="#"> 包材厂数据统计</a></li>
+                                <li><a class="hah" href="#"> 工厂每日状态</a></li>
+                                <li><a class="hah" href="#"> DC实时状态</a></li>
+                                <li><a class="hah" href="#"> DC每日状态</a></li>
+                                <li><a class="hah" href="#"> UID查询</a></li>
+                                <li><a class="hah" href="#"> 包材厂数据统计</a></li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
