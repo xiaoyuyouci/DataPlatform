@@ -14,7 +14,7 @@
 	<name>dp-pg</name>
 	<url>http://maven.apache.org</url>
 	<packaging>war</packaging>
-	<description>宝洁项目</description>
+	<description>宝洁项目 动态数据源</description>
 
 	<dependencies>
 		<dependency>

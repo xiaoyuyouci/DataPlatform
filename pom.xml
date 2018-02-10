@@ -149,7 +149,6 @@
 
 	<modules>
 		<module>dp-common</module>
-		<module>dp-commonweb</module>
-		<module>dp-pg</module>
+		<module>dp-pgweb</module>
 	</modules>
 </project>

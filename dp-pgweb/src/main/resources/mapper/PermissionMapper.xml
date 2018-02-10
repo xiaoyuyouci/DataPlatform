@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.PermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.winsafe.model.Permission" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="creator" property="creator" jdbcType="INTEGER" />
+    <result column="creationTime" property="creationTime" jdbcType="TIMESTAMP" />
+    <result column="modifier" property="modifier" jdbcType="INTEGER" />
+    <result column="modificationTime" property="modificationTime" jdbcType="TIMESTAMP" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nameCn" property="nameCn" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="filter" property="filter" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="deletable" property="deletable" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, creator, creationTime, modifier, modificationTime, name, nameCn, url, filter, level, deletable
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from permission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from permission
+    where id = #{id,jdbcType=INTEGER} and deletable=1
+  </delete>
+  <insert id="insert" parameterType="com.winsafe.model.Permission" >
+    insert into permission (id, creator, creationTime, 
+      modifier, modificationTime, name, nameCn,
+      url, filter, level, deletable)
+    values (#{id,jdbcType=INTEGER}, #{creator,jdbcType=INTEGER}, #{creationTime,jdbcType=TIMESTAMP}, 
+      #{modifier,jdbcType=INTEGER}, #{modificationTime,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR}, 
+      #{nameCn,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{filter,jdbcType=VARCHAR}, 
+      #{level,jdbcType=INTEGER}, #{deletable,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.winsafe.model.Permission" >
+    insert into permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="creationTime != null" >
+        creationTime,
+      </if>
+      <if test="modifier != null" >
+        modifier,
+      </if>
+      <if test="modificationTime != null" >
+        modificationTime,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="nameCn != null" >
+        nameCn,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="filter != null" >
+        filter,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="deletable != null" >
+        deletable,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null" >
+        #{modifier,jdbcType=INTEGER},
+      </if>
+      <if test="modificationTime != null" >
+        #{modificationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameCn != null" >
+        #{nameCn,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="filter != null" >
+        #{filter,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="deletable != null" >
+        #{deletable,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.winsafe.model.Permission" >
+    update permission
+    <set >
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=INTEGER},
+      </if>
+      <if test="creationTime != null" >
+        creationTime = #{creationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifier != null" >
+        modifier = #{modifier,jdbcType=INTEGER},
+      </if>
+      <if test="modificationTime != null" >
+        modificationTime = #{modificationTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nameCn != null" >
+        nameCn = #{nameCn,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="filter != null" >
+        filter = #{filter,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.winsafe.model.Permission" >
+    update permission
+    set creator = #{creator,jdbcType=INTEGER},
+      creationTime = #{creationTime,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=INTEGER},
+      modificationTime = #{modificationTime,jdbcType=TIMESTAMP},
+      name = #{name,jdbcType=VARCHAR},
+      nameCn = #{nameCn,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      filter = #{filter,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectPermissionList" parameterType="Permission" resultType="Permission">
+	select * from permission
+	<where>
+		<if test="id != null"> and id=#{id, jdbcType=INTEGER}</if>
+		<if test="name != null and name !=''"> and name=#{name, jdbcType=VARCHAR}</if>
+		<if test="nameCn != null and nameCn !=''"> and nameCn=#{nameCn, jdbcType=VARCHAR}</if>
+		<if test="url != null and url !=''"> and url=#{url, jdbcType=VARCHAR}</if>
+		<if test="filter != null and filter !=''"> and filter=#{filter, jdbcType=VARCHAR}</if>
+		<if test="level != null"> and level=#{level, jdbcType=INTEGER}</if>
+		<if test="searchVal != null and searchVal !=''"> and (name like '%${searchVal}%' or nameCn like '%${searchVal}%')</if>
+	</where>
+  </select>
+  
+  <select id="selectPermissionListByUserId" parameterType="Integer" resultType="Permission">
+	select * from permission
+	<where>
+		level=0 and
+		id in (select permissionId from rolepermission where roleid in (select roleid from userrole where userid=#{_parameter}))
+	</where>
+  </select>
+  
+    <select id="selectPermissionListByRoleId" parameterType="Permission" resultType="Permission">
+	select * from permission
+	<where>
+		level=0 and
+		id in (select permissionId from rolepermission where roleid=#{roleId, jdbcType=VARCHAR})
+		<if test="searchVal != null and searchVal !=''"> and (name like '%${searchVal}%' or nameCn like '%${searchVal}%')</if>
+	</where>
+  </select>
+  
+    <select id="selectUnselectedPermissionListByRoleId" parameterType="Permission" resultType="Permission">
+	select * from permission
+	<where>
+		level=0 and
+		id not in (select permissionId from rolepermission where roleid=#{roleId, jdbcType=VARCHAR})
+		<if test="searchVal != null and searchVal !=''"> and (name like '%${searchVal}%' or nameCn like '%${searchVal}%')</if>
+	</where>
+  </select>
+</mapper>
