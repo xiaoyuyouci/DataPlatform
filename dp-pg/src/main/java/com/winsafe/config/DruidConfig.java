@@ -46,6 +46,31 @@ public class DruidConfig implements EnvironmentAware {
 
     private Environment environment;
 
+    public static final String PRIMARY_DATA_SOURCE_NAME = "primary";
+    
+    public static final String DATA_SOURCE_PREfIX_CUSTOM="spring.custom.datasource.";
+
+    public static final String DATA_SOURCE_CUSTOM_NAME="name";
+
+    public static final String SEP = ",";
+    
+    public static final String DRUID_SOURCE_PREFIX = "spring.datasource.druid.";
+
+    public static final String DATA_SOURCE_TYPE = "type";
+    public static final String DATA_SOURCE_DRIVER = "driver-class-name";
+    public static final String DATA_SOURCE_URL = "url";
+    public static final String DATA_SOURCE_USER_NAME = "username";
+    public static final String DATA_SOURCE_PASSWORD = "password";
+
+    public static final String DATASOURCE_TYPE_DEFAULT = "com.alibaba.druid.pool.DruidDataSource";
+
+    public static final  String RESULT_CONSTANTS = "result";
+    public static final  String SUCCESS_RESULT = "SUCCESS";
+    public static final  String FAIL_RESULT = "FAIL";
+    public static final  String MESSAGE_CONSTANTS = "message";
+
+    public static final String ENABLED_ATTRIBUTE_NAME = "enabled";
+    
     /**
      * @param environment the enviroment to set
      */
@@ -60,7 +85,7 @@ public class DruidConfig implements EnvironmentAware {
         DynamicDataSource dynamicDataSource = new DynamicDataSource();
         LinkedHashMap<Object, Object> targetDatasources = new LinkedHashMap<>();
         initCustomDataSources(targetDatasources);
-        dynamicDataSource.setDefaultTargetDataSource(targetDatasources.get(DruidConstants.PRIMARY_DATA_SOURCE_NAME));
+        dynamicDataSource.setDefaultTargetDataSource(targetDatasources.get(PRIMARY_DATA_SOURCE_NAME));
         dynamicDataSource.setTargetDataSources(targetDatasources);
         dynamicDataSource.afterPropertiesSet();
         return dynamicDataSource;
@@ -68,8 +93,8 @@ public class DruidConfig implements EnvironmentAware {
 
     private void initCustomDataSources(LinkedHashMap<Object, Object> targetDataResources)
     {
-        RelaxedPropertyResolver property = new RelaxedPropertyResolver(environment, DruidConstants.DATA_SOURCE_PREfIX_CUSTOM);
-        String dataSourceNames = property.getProperty(DruidConstants.DATA_SOURCE_CUSTOM_NAME);
+        RelaxedPropertyResolver property = new RelaxedPropertyResolver(environment, DATA_SOURCE_PREfIX_CUSTOM);
+        String dataSourceNames = property.getProperty(DATA_SOURCE_CUSTOM_NAME);
         if(StringUtils.isEmpty(dataSourceNames))
         {
             logger.error("The multiple data source list are empty.");
@@ -81,13 +106,13 @@ public class DruidConfig implements EnvironmentAware {
               Map<String,Object> druidValuesMaps = new HashMap<>();
               for(String key:druidPropertiesMaps.keySet())
               {
-                  String druidKey = DruidConstants.DRUID_SOURCE_PREFIX + key;
+                  String druidKey = DRUID_SOURCE_PREFIX + key;
                   druidValuesMaps.put(druidKey,druidPropertiesMaps.get(key));
               }
 
               MutablePropertyValues dataSourcePropertyValue = new MutablePropertyValues(druidValuesMaps);
 
-              for (String dataSourceName : dataSourceNames.split(DruidConstants.SEP)) {
+              for (String dataSourceName : dataSourceNames.split(SEP)) {
                 try {
                     Map<String, Object> dsMaps = property.getSubProperties(dataSourceName+".");
 
@@ -99,7 +124,7 @@ public class DruidConfig implements EnvironmentAware {
                         }
                         else
                         {
-                            String druidKey = DruidConstants.DRUID_SOURCE_PREFIX + dsKey;
+                            String druidKey = DRUID_SOURCE_PREFIX + dsKey;
                             dataSourcePropertyValue.addPropertyValue(druidKey, dsMaps.get(dsKey));
                         }
                     }
@@ -150,7 +175,7 @@ public class DruidConfig implements EnvironmentAware {
             {
                 ds = new DruidDataSource();
 
-                RelaxedDataBinder dataBinder = new RelaxedDataBinder(ds, DruidConstants.DRUID_SOURCE_PREFIX);
+                RelaxedDataBinder dataBinder = new RelaxedDataBinder(ds, DRUID_SOURCE_PREFIX);
                 dataBinder.setConversionService(conversionService);
                 dataBinder.setIgnoreInvalidFields(false);
                 dataBinder.setIgnoreNestedProperties(false);
@@ -169,7 +194,7 @@ public class DruidConfig implements EnvironmentAware {
         Map<String, Object> druidPropertiesMaps = property.getSubProperties("stat-view-servlet.");
 
         boolean statViewServletEnabled = false;
-        String statViewServletEnabledKey = DruidConstants.ENABLED_ATTRIBUTE_NAME;
+        String statViewServletEnabledKey = ENABLED_ATTRIBUTE_NAME;
         ServletRegistrationBean registrationBean = null;
 
         if(druidPropertiesMaps.containsKey(statViewServletEnabledKey))
@@ -217,7 +242,7 @@ public class DruidConfig implements EnvironmentAware {
 
 
         boolean webStatFilterEnabled = false;
-        String webStatFilterEnabledKey = DruidConstants.ENABLED_ATTRIBUTE_NAME;
+        String webStatFilterEnabledKey = ENABLED_ATTRIBUTE_NAME;
         FilterRegistrationBean registrationBean = null;
         if(druidPropertiesMaps.containsKey(webStatFilterEnabledKey))
         {
@@ -287,7 +312,7 @@ public class DruidConfig implements EnvironmentAware {
             Filter filter = filters.get(i);
 
             Map<String, Object> filterValueMap = filterProperty.getSubProperties(filterName + ".");
-            String statFilterEnabled = filterValueMap.get(DruidConstants.ENABLED_ATTRIBUTE_NAME).toString();
+            String statFilterEnabled = filterValueMap.get(ENABLED_ATTRIBUTE_NAME).toString();
             if(statFilterEnabled.equals("true")){
                 MutablePropertyValues propertyValues = new  MutablePropertyValues(filterValueMap);
                 RelaxedDataBinder dataBinder = new RelaxedDataBinder(filter);

@@ -39,6 +39,7 @@
 	</dependencies>
 	<build>
 		<finalName>dp-pg</finalName>
+		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -58,9 +59,6 @@
 							</excludes>
 						</overlay>
 					</overlays>
-					<excludes>
-						*.*
-					</excludes>
 				</configuration>
 			</plugin>
 
