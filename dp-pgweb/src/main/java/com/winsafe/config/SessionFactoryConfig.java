@@ -34,7 +34,6 @@ public class SessionFactoryConfig {
     @Autowired
     private DataSource dataSource;
 
-
     @Autowired
     private PageHelper pageHelper;
     
@@ -43,7 +42,7 @@ public class SessionFactoryConfig {
 
     @Value("${mybatis.mapperLocations}")
     private String mapperLocations;
-    
+
     /**
      *创建sqlSessionFactoryBean 实例
      * 并且设置configtion 如驼峰命名.等等
@@ -61,7 +60,7 @@ public class SessionFactoryConfig {
             Interceptor[] plugins =  new Interceptor[]{pageHelper};
             sqlSessionFactoryBean.setPlugins(plugins);//自定义的sqlSessionFactoryBean如果没配置插件的话，会导致插件无效
             sqlSessionFactoryBean.setDataSource(dataSource);            
-            sqlSessionFactoryBean.setMapperLocations(resolver.getResources(mapperLocations));
+            sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mapper/*.xml"));
             sqlSessionFactoryBean.setTypeAliasesPackage(typeAliasesPackage);
             return sqlSessionFactoryBean;
         }
