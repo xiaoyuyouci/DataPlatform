@@ -38,27 +38,4 @@ public class DruidConstants {
     public static final String ENABLED_ATTRIBUTE_NAME = "enabled";
     public static final String DB_TYPE = "dbType";
 
-    public static final String ID_JSON_PATH = "$.id";
-    public static final String STUDENT_ID_JSON_PATH = "$.student.id";
-    public static final String NAME_JSON_PATH = "$.name";
-    public static final String STUDENT_NAME_JSON_PATH = "$.student.name";
-    public static final String CLASS_JSON_PATH = "$.className";
-    public static final String STUDENT_CLASS_JSON_PATH = "$.student.className";
-    public static final String RESULT_JSON_PATH = "$.result";
-    public static final String MESSAGE_JSON_PATH = "$.message";
-    public static final String STUDENTS_JSON_PATH = "$.students";
-    public static final String NEW_NAME_JSON_PATH = "$.newName";
-    public static final String NEW_CLASS_JSON_PATH = "$.newClassName";
-
-    public static final String STUDENT_NOT_EXIST  = "The student having id %d does not exist!";
-    public static final String STUDENTS_NOT_EXIST = "No matched students";
-    
-
-    public static final String ADD_STUDENT_API_URL = "/api/addStudent";
-    public static final String ADD_STUDENTS_API_URL = "/api/addStudents";
-    public static final String DELETE_STUDENT_API_URL = "/api/deleteStudent";
-    public static final String UPDATE_STUDENT_API_URL = "/api/updateStudent";
-    public static final String GET_STUDENT_API_URL = "/api/getStudent";
-    public static final String GET_STUDENTS_API_URL = "/api/getStudents";
-    public static final String DELETE_STUDENTS_API_URL = "/api/deleteStudents";
 }

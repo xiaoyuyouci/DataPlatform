@@ -10,6 +10,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.winsafe.annotation.DataSourceAnnotation;
+import com.winsafe.datasource.DataSourceName;
 import com.winsafe.datasource.DynamicDataSourceContextHolder;
 
 @Aspect
@@ -28,15 +29,18 @@ public class DynamicDataSourceAspect {
      */
     @Before("@annotation(dataSourceAnnotation)")
     public void changeDataSource(JoinPoint point, DataSourceAnnotation dataSourceAnnotation){
-        Object[] methodArgs = point.getArgs();
-        String dsId = methodArgs[methodArgs.length-1].toString();
-
-        if(!DynamicDataSourceContextHolder.existDateSoure(dsId)){
-            logger.error("No data source found ...【"+dsId+"】");
-            return;
-        }else{
-            DynamicDataSourceContextHolder.setDateSoureType(dsId);
-        }
+    	for(Object object: point.getArgs()){
+    		if(object instanceof DataSourceName){
+    			String dsId = ((DataSourceName) object).getName();
+    			if(!DynamicDataSourceContextHolder.existDateSoure(dsId)){
+    	            logger.info("Data source 【"+dsId+"】 not exists, use primary data source instead.");
+    	            return;
+    	        }else{
+    	            DynamicDataSourceContextHolder.setDateSoureType(dsId);
+    	        }
+    			break;
+    		}
+    	}
     }
 
     /**

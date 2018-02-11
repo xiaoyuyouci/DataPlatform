@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.DcDailyMapper" >
+	<select id="getDcDailyData" resultType="map" parameterType="java.util.Map">
+		select tmp.*, case when (tmp.sumsartonscanning - tmp.scanrecargonum - tmp.scanshortnum - nvl(tmp.signScanNum,0)) > 0 then  floor (round ((tmp.sumidcode / (tmp.sumsartonscanning - tmp.scanrecargonum - tmp.scanshortnum - nvl(tmp.signScanNum,0))) * 100,2))  else case when  tmp.sumidcode + NVL(tmp.sumsartonscanning,0) = tmp.sumidcode  then 100 else 0 end  end percents 
+		from   
+		(
+		 	select temp.*, (select sum (ttd.quantity) from take_ticket_detail ttd where ttd.ttid = temp. id) as sumquantity, 
+			(select sum (ttd.quantity) from take_ticket_detail ttd where ttd.cartonscanning = 1 and ttd.ttid = temp. id and temp.receiveno = ttd.receiveno) as sumsartonscanning, 
+		 	(select sum (tti.quantity) from take_ticket_idcode tti where tti.ttid = temp. id and isidcode = 1 and temp.receiveno = tti.receiveno) as sumidcode,
+		 	(select sum (ttd.recargonum) from take_ticket_detail ttd where ttd.ttid = temp. id and ttd.cartonscanning = 1 and ttd.receiveno = temp.receiveno) as scanrecargonum,
+		 	(select sum (ttd.shortnum) from take_ticket_detail ttd where ttd.ttid = temp. id and ttd.cartonscanning = 1 and ttd.receiveno = temp.receiveno) as scanshortnum,  
+		 	(select NVL(SUM (ue.unrecognizednum),0) from unrecognized_report ue where ue.ttid = temp. id and ue.receiveno = temp.receiveno) as signScanNum 
+		 	from 
+		 	(
+		 		select distinct tt.id,tt.nccode,tt.oid,tt.oname,tt.isaudit,tt.auditid,tt.bus_no,tt.isblankout,tt.isdelay,tt.scanuser,tt.startScanningTime,tt.endScanningTime,tt.makedate,ttd.receiveno,sum(ttd.recargonum) as recargonum,sum (ttd.shortnum) as shortnum  
+		 		from take_ticket tt,take_ticket_detail ttd 
+		 		<where>
+					tt.id = ttd.ttid
+					<if test="ncCode != null and ncCode !=''"> and ncCode=#{ncCode, jdbcType=VARCHAR}</if>
+					<if test="startDate != null and startDate !=''"> and makeDate &gt;= to_date(#{makeDate, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
+					<if test="endDate != null and endDate !=''"> and makeDate &lt;= to_date(#{makeDate, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
+					<if test="isAudit != null and isAudit !=''"> and isAudit=#{isAudit, jdbcType=VARCHAR}</if>
+					<if test="oid != null and oid !=''"> and oid like '%${oid}%'</if>
+					<if test="busNo != null and busNo !=''"> and bus_no like '%${busNo}%'</if>
+					<if test="isBlankout != null and isBlankout !=''"> and isBlankout=#{isBlankout, jdbcType=VARCHAR}</if>
+					<if test="receiveNo != null and receiveNo !=''"> and receiveNo like '%${receiveNo}%'</if>
+					<if test="deliveryNo != null and deliveryNo !=''"> and deliveryNo like '%${deliveryNo}%'</if>
+		 			and tt.warehouseid in ( select ruw.warehouse_id from rule_user_wh ruw where ruw.user_id=1) 
+				</where>
+		 		group by tt.id,tt.nccode,tt.oid,tt.oname,tt.isaudit,tt.auditid,tt.bus_no,tt.isblankout,tt.isdelay,tt.scanuser,tt.startScanningTime,tt.endScanningTime,tt.makedate,ttd.receiveno 
+		 	) temp 
+		) 
+		tmp
+		<where>
+			<if test="needScan != null and needScan !='' and needScan =='0'.toString()"> and tmp.sumsartonscanning&lt;1</if>
+			<if test="needScan != null and needScan !='' and needScan =='1'.toString()"> and tmp.sumsartonscanning&gt;0</if>
+		</where>
+		order by tmp.makedate desc
+	</select>
+</mapper>

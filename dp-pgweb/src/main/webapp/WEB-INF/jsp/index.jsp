@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Bootstrap Admin Theme</title>
+    <title>报表平台</title>
 
 
     <!-- Bootstrap Core CSS -->
@@ -22,7 +22,11 @@
 
 	<!-- DataTables CSS -->
     <link href="res/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
-
+    <!-- 
+    <link href="res/DataTables-1.10.15/extensions/FixedColumns/css/fixedColumns.dataTables.min.css" rel="stylesheet">
+    <link href="res/DataTables-1.10.15/extensions/Scroller/css/scroller.dataTables.min.css" rel="stylesheet">
+ 	-->
+ 	
     <!-- DataTables Responsive CSS -->
     <link href="res/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
 
@@ -32,7 +36,7 @@
     <link href="res/dist/css/sb-admin-2.css" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
-    <link href="res/vendor/morrisjs/morris.css" rel="stylesheet">
+    <!-- <link href="res/vendor/morrisjs/morris.css" rel="stylesheet"> -->
 
     <!-- Custom Fonts -->
     <link href="res/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -81,11 +85,11 @@
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 我的报表<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a class="hah" href="report/fcRealtimeGrid"> 工厂实时状态</a></li>
-                                <li><a class="hah" href="#"> 工厂每日状态</a></li>
-                                <li><a class="hah" href="#"> DC实时状态</a></li>
-                                <li><a class="hah" href="#"> DC每日状态</a></li>
-                                <li><a class="hah" href="#"> UID查询</a></li>
-                                <li><a class="hah" href="#"> 包材厂数据统计</a></li>
+                                <li><a class="hah" href="report/fcDailyGrid"> 工厂每日状态</a></li>
+                                <li><a class="hah" href="report/dcRealtimeGrid"> DC实时状态</a></li>
+                                <li><a class="hah" href="report/dcDailyGrid"> DC每日状态</a></li>
+                                <li><a class="hah" href="report/uidGrid"> UID查询</a></li>
+                                <li><a class="hah" href="report/ppStatisticsGrid"> 包材厂数据统计</a></li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -123,12 +127,18 @@
     <script src="res/vendor/metisMenu/metisMenu.min.js"></script>
 
     <!-- Morris Charts JavaScript -->
+    <!-- 
     <script src="res/vendor/raphael/raphael.min.js"></script>
     <script src="res/vendor/morrisjs/morris.min.js"></script>
-    <script src="res/data/morris-data.js"></script>
+    <script src="res/data/morris-data.js"></script> 
+    -->
 
 	<!-- DataTables JavaScript -->
     <script src="res/vendor/datatables/js/jquery.dataTables.min.js"></script>
+    <!-- 
+    <script src="res/DataTables-1.10.15/extensions/FixedColumns/js/dataTables.fixedColumns.js"></script>
+    <script src="res/DataTables-1.10.15/extensions/Scroller/js/dataTables.scroller.min.js"></script>
+     -->
     <script src="res/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
     <script src="res/vendor/datatables-responsive/dataTables.responsive.js"></script>
 	<script src="res/DataTables-1.10.15/extensions/Select/js/dataTables.select.js"></script>

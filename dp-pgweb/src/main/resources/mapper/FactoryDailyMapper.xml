@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.FactoryDailyMapper" >
+
+	<sql id="where-condition">
+		<where>
+			<if test="bu != null and bu !=''"> and bu=#{bu, jdbcType=VARCHAR}</if>
+			<if test="lineCode != null and lineCode !=''"> and lineCode like '%${lineCode}%'</if>
+			<if test="batchNo != null and batchNo !=''"> and batchNo like '%${batchNo}%'</if>
+			<if test="plantCode != null and plantCode !=''"> and plantCode like '%${plantCode}%'</if>
+			<if test="mCode != null and mCode !=''"> and mCode like '%${mCode}%'</if>
+			<if test="date != null and date !=''"> and date=#{date, jdbcType=VARCHAR}</if>
+		</where>
+	</sql>
+
+	<select id="getFcDailyData" resultType="map" parameterType="java.util.Map">
+		<choose>
+			<when test="(bu != null and bu !='') or (linecode != null and linecode !='') or (batchno != null and batchno !='') or (plantcode != null and plantcode !='') or (mcode != null and mcode !='')">
+				select * 
+				from (select * from dayreport <include refid="where-condition"/>) as f 
+				LEFT JOIN (SELECT DISTINCT r_bu,r_plantcode,r_linecode from factory_realtime ) as d 
+				on (f.bu =d.r_bu  and f.plantcode = d.r_plantcode  and f.linecode = d.r_linecode )
+			</when>
+			<otherwise>
+				select * 
+				from ( SELECT DISTINCT r_bu,r_plantcode,r_linecode from factory_realtime GROUP BY r_bu,r_plantcode,r_linecode) as f 
+				LEFT JOIN (select * from dayreport <where><if test="date != null and date !=''"> and date=#{date, jdbcType=VARCHAR}</if></where> ) as d
+				on f.r_bu = d.bu and f.r_plantcode = d.plantcode and f.r_linecode = d.linecode
+			</otherwise>
+		</choose>
+	</select>
+	
+	
+</mapper>

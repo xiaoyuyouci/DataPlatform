@@ -124,16 +124,14 @@ public class DruidConfig implements EnvironmentAware {
 
     private void initCustomDataSources(LinkedHashMap<Object, Object> targetDataResources)
     {
-        RelaxedPropertyResolver property =
-                new RelaxedPropertyResolver(environment, DATA_SOURCE_PREfIX_CUSTOM);
+        RelaxedPropertyResolver property = new RelaxedPropertyResolver(environment, DATA_SOURCE_PREfIX_CUSTOM);
         String dataSourceNames = property.getProperty(DATA_SOURCE_CUSTOM_NAME);
         if(StringUtils.isEmpty(dataSourceNames))
         {
             logger.error("The multiple data source list are empty.");
         }
         else{
-              RelaxedPropertyResolver springDataSourceProperty =
-                      new RelaxedPropertyResolver(environment, "spring.datasource.");
+              RelaxedPropertyResolver springDataSourceProperty = new RelaxedPropertyResolver(environment, "spring.datasource.");
 
               Map<String, Object> druidPropertiesMaps = springDataSourceProperty.getSubProperties("druid.");
               Map<String,Object> druidValuesMaps = new HashMap<>();
@@ -222,8 +220,7 @@ public class DruidConfig implements EnvironmentAware {
     @Bean
     public ServletRegistrationBean statViewServlet(){
 
-        RelaxedPropertyResolver property =
-                new RelaxedPropertyResolver(environment, "spring.datasource.druid.");
+        RelaxedPropertyResolver property = new RelaxedPropertyResolver(environment, "spring.datasource.druid.");
 
         Map<String, Object> druidPropertiesMaps = property.getSubProperties("stat-view-servlet.");
 
@@ -234,8 +231,7 @@ public class DruidConfig implements EnvironmentAware {
 
         if(druidPropertiesMaps.containsKey(statViewServletEnabledKey))
         {
-            String statViewServletEnabledValue =
-                    druidPropertiesMaps.get(statViewServletEnabledKey).toString();
+            String statViewServletEnabledValue = druidPropertiesMaps.get(statViewServletEnabledKey).toString();
             statViewServletEnabled = Boolean.parseBoolean(statViewServletEnabledValue);
         }
         if(statViewServletEnabled){

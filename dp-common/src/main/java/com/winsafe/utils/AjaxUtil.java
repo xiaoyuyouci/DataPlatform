@@ -75,6 +75,18 @@ public class AjaxUtil {
 			throw(ex);
 		}
 	}
+	
+	public static void ajaxReturn(String jsonString, HttpServletResponse response) throws Exception{
+		response.setContentType("text/html");
+		response.setCharacterEncoding("utf-8");
+		try{
+			PrintWriter out=response.getWriter();
+			out.println(jsonString);
+		}catch(Exception ex){
+			throw(ex);
+		}
+	}
+	
 	/**
 	 * 信息过期
 	 */

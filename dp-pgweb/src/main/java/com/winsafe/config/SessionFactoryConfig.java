@@ -42,6 +42,9 @@ public class SessionFactoryConfig {
 
     @Value("${mybatis.mapperLocations}")
     private String mapperLocations;
+    
+    @Value("${mybatis.configuration.callSettersOnNulls}")
+    private boolean callSettersOnNulls;
 
     /**
      *创建sqlSessionFactoryBean 实例
@@ -60,8 +63,13 @@ public class SessionFactoryConfig {
             Interceptor[] plugins =  new Interceptor[]{pageHelper};
             sqlSessionFactoryBean.setPlugins(plugins);//自定义的sqlSessionFactoryBean如果没配置插件的话，会导致插件无效
             sqlSessionFactoryBean.setDataSource(dataSource);            
-            sqlSessionFactoryBean.setMapperLocations(resolver.getResources("classpath:mapper/*.xml"));
+            sqlSessionFactoryBean.setMapperLocations(resolver.getResources(mapperLocations));
             sqlSessionFactoryBean.setTypeAliasesPackage(typeAliasesPackage);
+            
+            org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+            configuration.setCallSettersOnNulls(callSettersOnNulls);
+            sqlSessionFactoryBean.setConfiguration(configuration);
+            
             return sqlSessionFactoryBean;
         }
         catch(IOException ex){

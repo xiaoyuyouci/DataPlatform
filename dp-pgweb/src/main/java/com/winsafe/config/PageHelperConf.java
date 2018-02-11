@@ -22,6 +22,9 @@ public class PageHelperConf {
 	@Value("${mybatis.pagehelper.reasonable}")
     private String reasonable;
 	
+	@Value("${mybatis.pagehelper.autoRuntimeDialect}")
+	private String autoRuntimeDialect;
+	
 
 	@Bean
     public PageHelper pageHelper() {
@@ -30,6 +33,7 @@ public class PageHelperConf {
         p.setProperty("offsetAsPageNum", offsetAsPageNum);
         p.setProperty("rowBoundsWithCount", rowBoundsWithCount);
         p.setProperty("reasonable", reasonable);
+        p.setProperty("autoRuntimeDialect", autoRuntimeDialect);
         pageHelper.setProperties(p);
         return pageHelper;
     }
