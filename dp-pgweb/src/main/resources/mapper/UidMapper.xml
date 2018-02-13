@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.UidMapper" >
+	<select id="getUidData" resultType="map" parameterType="java.util.Map">
+		<choose>
+			<when test="cartonUid != null and cartonUid != ''">
+			</when>
+			<when test="itemUid != null and itemUid != ''">
+			</when>
+			<when test="batchNo != null and batchNo != ''">
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

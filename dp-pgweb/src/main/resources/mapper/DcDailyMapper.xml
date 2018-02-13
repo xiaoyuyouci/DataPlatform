@@ -18,8 +18,8 @@
 		 		<where>
 					tt.id = ttd.ttid
 					<if test="ncCode != null and ncCode !=''"> and ncCode=#{ncCode, jdbcType=VARCHAR}</if>
-					<if test="startDate != null and startDate !=''"> and makeDate &gt;= to_date(#{makeDate, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
-					<if test="endDate != null and endDate !=''"> and makeDate &lt;= to_date(#{makeDate, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
+					<if test="startDate != null and startDate !=''"> and makeDate &gt;= to_date(#{startDate, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
+					<if test="endDate != null and endDate !=''"> and makeDate &lt;= to_date(concat(#{endDate, jdbcType=VARCHAR}, ' 23:59:59'),'yyyy-MM-dd hh24:mi:ss')</if>
 					<if test="isAudit != null and isAudit !=''"> and isAudit=#{isAudit, jdbcType=VARCHAR}</if>
 					<if test="oid != null and oid !=''"> and oid like '%${oid}%'</if>
 					<if test="busNo != null and busNo !=''"> and bus_no like '%${busNo}%'</if>

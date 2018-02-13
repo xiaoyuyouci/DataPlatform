@@ -31,6 +31,7 @@
     <link href="res/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
 
 	<link href="res/DataTables-1.10.15/extensions/Select/css/select.dataTables.css" rel="stylesheet">
+	<link href="res/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.min.css" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="res/dist/css/sb-admin-2.css" rel="stylesheet">
@@ -142,6 +143,7 @@
     <script src="res/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
     <script src="res/vendor/datatables-responsive/dataTables.responsive.js"></script>
 	<script src="res/DataTables-1.10.15/extensions/Select/js/dataTables.select.js"></script>
+	<script src="res/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.min.js"></script>
 	
     <!-- Custom Theme JavaScript -->
     <script src="res/dist/js/sb-admin-2.js"></script>
