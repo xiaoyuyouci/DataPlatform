@@ -54,6 +54,7 @@
 			<!-- /.panel-heading -->
 
 			<div class="panel-body">
+				<button type="button" id="btn_exportFcDailyGrid" class="btn btn-outline btn-default">导出</button>
 				<table width="100%" style="white-space: nowrap" class="table table-striped table-bordered table-hover" id="table_fcDailyGrid">
 					<thead>
 						<tr>

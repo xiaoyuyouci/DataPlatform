@@ -26,6 +26,10 @@ $(document).ready(
 				layer.close(searchLayerIndex);
 			});
 		});
+		
+		$("#btn_exportDcDailyGrid").click(function(){
+			exportDcDailyGrid();
+		});
 	}
 );
 
@@ -166,4 +170,24 @@ function initFcDailyGrid(){
 			}
 		]
 	});
+}
+
+function exportDcDailyGrid(){
+	var form=$("<form>");//定义一个form表单
+	form.attr("style", "display:none");
+	form.attr("target", "");
+	form.attr("method", "post");
+	form.attr("action", "/report/ajaxExportDcDailyGrid");
+	
+	$($("#dcDailyGridQueryForm").serializeArray()).each(function(){
+        var input = $("<input>");
+        input.attr("type", "hidden");
+        input.attr("name", this.name);
+        input.attr("value", this.value);
+        form.append(input);
+    });
+	
+	$("body").append(form);//将表单放置在web中
+	form.submit();//表单提交
+	$(form).remove();
 }
