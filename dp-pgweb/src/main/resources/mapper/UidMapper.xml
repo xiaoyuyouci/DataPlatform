@@ -1,9 +1,101 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.winsafe.dao.UidMapper" >
-	<select id="getUidData" resultType="map" parameterType="java.util.Map">
+	<select id="getCartonUidBaseData" resultType="map" parameterType="java.util.Map">
+		select tmp.*,organ.ORGANNAME 
+		from (
+			select TMP.*, UIT.BNO, UIT.MAKEDATE 
+			from (
+				SELECT p.mcode,UPR.CASEGTIN,p.MATERICALCHDES,UPR.PLANTCODE,UPR.LINECODE,UPR.BATCHNO,UPR.ISSENDARVATO,UPR.PROCODE 
+				from UPLOAD_PRODUCE_REPORT upr, PRODUCT p 
+				where p.id = UPR.FPCID and UPR.PROCODE = #{cartonUid, jdbcType=VARCHAR}
+			) tmp
+			LEFT JOIN UPLOAD_IDCODE_TEMPORARY uit on tmp.procode = uit.code
+		) tmp 
+		LEFT JOIN ORGAN on TMP.plantcode = ORGAN.OECODE
+	</select>
+	
+	<select id="getCartonUidDetailData" resultType="map" parameterType="java.util.Map">
+		select tmp.*, case when (tmp.sumsartonscanning - tmp.scanrecargonum - tmp.scanshortnum - nvl(tmp.signScanNum,0)) > 0 then 
+				floor (round ((tmp.sumidcode / (tmp.sumsartonscanning - tmp.scanrecargonum - tmp.scanshortnum - nvl(tmp.signScanNum,0))) * 100,2))   
+				else case when  tmp.sumidcode + NVL(tmp.sumsartonscanning,0) = tmp.sumidcode  then 100 else 0 end  end percents from 
+				(select temp.*, (select sum (ttd.quantity) from take_ticket_detail ttd where ttd.ttid = temp. id) as sumquantity, 
+				(select sum (ttd.quantity) from take_ticket_detail ttd where ttd.cartonscanning = 1 and ttd.ttid = temp. id and temp.receiveno = ttd.receiveno) as sumsartonscanning, 
+				(select sum (tti.quantity) from take_ticket_idcode tti where tti.ttid = temp. id and isidcode = 1 and temp.receiveno = tti.receiveno) as sumidcode, 
+				(select sum (ttd.recargonum) from take_ticket_detail ttd where ttd.ttid = temp. id and ttd.cartonscanning = 1 and ttd.receiveno = temp.receiveno) as scanrecargonum, 
+				(select sum (ttd.shortnum) from take_ticket_detail ttd where ttd.ttid = temp. id and ttd.cartonscanning = 1 and ttd.receiveno = temp.receiveno) as scanshortnum, 
+				(select NVL(SUM (ue.unrecognizednum),0) from unrecognized_report ue where ue.ttid = temp. id and ue.receiveno = temp.receiveno) as signScanNum from 
+				(select tt.id,tt.nccode,tt.oid,tt.oname,tt.scanuser,tt.startScanningTime,tt.endScanningTime, 
+				tt.makedate,ttd.receiveno,ttd.receivename,ttd.deliveryno,sum(ttd.recargonum) as recargonum,sum (ttd.shortnum) as shortnum  from take_ticket tt,take_ticket_detail ttd  
+				where tt.id = #{ttid, jdbcType=VARCHAR} and tt. id = ttd.ttid 
+				and tt.warehouseid in ( select ruw.warehouse_id from rule_user_wh ruw where ruw.user_id=1)  group by tt. id,tt.nccode,tt.oid,tt.oname, 
+				tt.scanuser,tt.startScanningTime,tt.endScanningTime,tt.makedate,ttd.receiveno,ttd.receivename,ttd.deliveryno ) temp )  tmp
+	</select>
+	
+	<select id="getItemUidBaseData" resultType="map" parameterType="java.util.Map">
+		select lmp.*, organ.ORGANNAME 
+		from (
+			SELECT p.mcode,p.itemgtin,p.id,upri.CASEGTIN,p.MATERICALCHDES, UPRi.PLANTCODE,UPRi.LINECODE,UPRi.BATCHNO,UPRi.ISSENDARVATO,UPRi.PROCODE
+			from UPLOAD_PRODUCE_REPORT_ITEM upri, PRODUCT p 
+			where p.id = upri.FPCID and UPRi.PROCODE = #{itemUid, jdbcType=VARCHAR} and rownum = 1
+		) lmp
+		LEFT JOIN ORGAN on lmp.plantcode = ORGAN.OECODE
+	</select>
+	
+	<select id="getBnoList" resultType="map" parameterType="java.util.Map">
+		SELECT bno from bno_tmp where batchno = #{batchNo, jdbcType=VARCHAR} group by bno
+	</select>
+	
+	<select id="getItemUidDetailData" resultType="map" parameterType="java.util.Map">
+		select tmp.*, case when (tmp.sumsartonscanning - tmp.scanrecargonum - tmp.scanshortnum - nvl(tmp.signScanNum,0)) > 0 then  
+				floor (round ((tmp.sumidcode / (tmp.sumsartonscanning - tmp.scanrecargonum - tmp.scanshortnum - nvl(tmp.signScanNum,0))) * 100,2))
+				else case when  tmp.sumidcode + NVL(tmp.sumsartonscanning,0) = tmp.sumidcode  then 100 else 0 end  end percents 
+		from  (select temp.*,
+				(select sum (ttd.quantity) from take_ticket_detail ttd where ttd.ttid = temp. id) as sumquantity,
+				(select sum (ttd.quantity) from take_ticket_detail ttd where ttd.cartonscanning = 1 and ttd.ttid = temp. id and temp.receiveno = ttd.receiveno) as sumsartonscanning,
+				(select sum (tti.quantity) from take_ticket_idcode tti where tti.ttid = temp. id and isidcode = 1 and temp.receiveno = tti.receiveno) as sumidcode, 
+				(select sum (ttd.recargonum) from take_ticket_detail ttd where ttd.ttid = temp. id and ttd.cartonscanning = 1 and ttd.receiveno = temp.receiveno) as scanrecargonum,
+				(select sum (ttd.shortnum) from take_ticket_detail ttd where ttd.ttid = temp. id and ttd.cartonscanning = 1 and ttd.receiveno = temp.receiveno) as scanshortnum,
+				(select NVL(SUM (ue.unrecognizednum),0) from unrecognized_report ue where ue.ttid = temp. id and ue.receiveno = temp.receiveno) as signScanNum from
+				(select tt.id,tt.nccode,tt.oid,tt.oname,tt.scanuser,tt.startScanningTime,tt.endScanningTime, tt.makedate,ttd.receiveno,ttd.receivename,
+				ttd.deliveryno,sum(ttd.recargonum) as recargonum,sum (ttd.shortnum) as shortnum  
+				from take_ticket tt,take_ticket_detail ttd 
+				<where>
+					<if test="bnos != null and bnos !=''"> and tt.id in (${bnos}) </if>
+					<if test="productId != null and productId !=''"> and TTD.PRODUCTID = #{productId, jdbcType=VARCHAR} </if>
+					and tt. id = ttd.ttid and tt.warehouseid in ( select ruw.warehouse_id from rule_user_wh ruw where ruw.user_id=1)
+				</where>
+				group by tt. id,tt.nccode,tt.oid,tt.oname, tt.scanuser,tt.startScanningTime,tt.endScanningTime,tt.makedate,ttd.receiveno,ttd.receivename,ttd.deliveryno ) temp 
+		)
+		tmp
+	</select>
+	
+	<select id="getBatchDetail" resultType="map" parameterType="java.util.Map">
+		select lmp.*,organ.ORGANNAME 
+		from (
+			SELECT p.mcode,p.itemgtin,p.id,upr.CASEGTIN,p.MATERICALCHDES, UPR.PLANTCODE,UPR.LINECODE,UPR.ISSENDARVATO,UPR.BATCHNO 
+			from (SELECT * from UPLOAD_PRODUCE_REPORT where batchno = #{batchNo, jdbcType=VARCHAR}) upr LEFT JOIN  PRODUCT p on upr.FPCID = p.id 
+		) lmp 
+		LEFT JOIN ORGAN on lmp.plantcode = ORGAN.OECODE where ROWNUM =1
+	</select>
+	
+	<!-- <select id="getUidData" resultType="map" parameterType="java.util.Map">
 		<choose>
 			<when test="cartonUid != null and cartonUid != ''">
+				select tmp.*, case when (tmp.sumsartonscanning - tmp.scanrecargonum - tmp.scanshortnum - nvl(tmp.signScanNum,0)) > 0 then 
+				floor (round ((tmp.sumidcode / (tmp.sumsartonscanning - tmp.scanrecargonum - tmp.scanshortnum - nvl(tmp.signScanNum,0))) * 100,2))  
+				else case when  tmp.sumidcode + NVL(tmp.sumsartonscanning,0) = tmp.sumidcode  then 100 else 0 end  end percents from 
+				(select temp.*, (select sum (ttd.quantity) from take_ticket_detail ttd where ttd.ttid = temp. id) as sumquantity, 
+				(select sum (ttd.quantity) from take_ticket_detail ttd where ttd.cartonscanning = 1 and ttd.ttid = temp. id and temp.receiveno = ttd.receiveno) as sumsartonscanning,
+				(select sum (tti.quantity) from take_ticket_idcode tti where tti.ttid = temp. id and isidcode = 1 and temp.receiveno = tti.receiveno) as sumidcode, 
+				(select sum (ttd.recargonum) from take_ticket_detail ttd where ttd.ttid = temp. id and ttd.cartonscanning = 1 and ttd.receiveno = temp.receiveno) as scanrecargonum,
+				(select sum (ttd.shortnum) from take_ticket_detail ttd where ttd.ttid = temp. id and ttd.cartonscanning = 1 and ttd.receiveno = temp.receiveno) as scanshortnum,
+				(select NVL(SUM (ue.unrecognizednum),0) from unrecognized_report ue where ue.ttid = temp. id and ue.receiveno = temp.receiveno) as signScanNum from 
+				(select tt.id,tt.nccode,tt.oid,tt.oname,tt.scanuser,tt.startScanningTime,tt.endScanningTime,
+				tt.makedate,ttd.receiveno,ttd.receivename,ttd.deliveryno,sum(ttd.recargonum) as recargonum,sum (ttd.shortnum) as shortnum  from take_ticket tt,take_ticket_detail ttd 
+				where tt.id = '+bno+' and tt. id = ttd.ttid 
+				and tt.warehouseid in ( select ruw.warehouse_id from rule_user_wh ruw where ruw.user_id=1)  group by tt. id,tt.nccode,tt.oid,tt.oname,
+				tt.scanuser,tt.startScanningTime,tt.endScanningTime,tt.makedate,ttd.receiveno,ttd.receivename,ttd.deliveryno ) temp )  tmp
 			</when>
 			<when test="itemUid != null and itemUid != ''">
 			</when>
@@ -12,5 +104,5 @@
 			<otherwise>
 			</otherwise>
 		</choose>
-	</select>
+	</select> -->
 </mapper>

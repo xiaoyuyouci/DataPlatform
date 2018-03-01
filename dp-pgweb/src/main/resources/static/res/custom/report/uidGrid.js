@@ -73,9 +73,9 @@ function initFcDailyGrid(){
 						"data" : "CASEGTIN",
 						"targets"	:	[1],
 						"render": function(data,type,full){
-							if(gtin_flag == 2){
+							/*if(gtin_flag == 2){
 								return full.ITEMGTIN;
-							}
+							}*/
 							return data;
 						}
 					},
@@ -169,7 +169,7 @@ function initFcDailyGrid(){
 						"targets"	:[14],
 						"render"	:function(data){
 							if(data){
-								return getRealname(data);
+								return data;
 							}else{
 								return "";
 							}
@@ -195,7 +195,7 @@ function initFcDailyGrid(){
 						"data":"MAKEDATE",
 						"targets"	:[18],
 						"render"	:function(data){
-							return formatDate(data);
+							return data;
 						}
 					},
 					{
@@ -203,7 +203,7 @@ function initFcDailyGrid(){
 						"data":"STARTSCANNINGTIME",
 						"targets"	:[19],
 						"render"	:function(data){
-							return formatDate(data);
+							return data;
 						}
 					},
 					{
@@ -211,7 +211,7 @@ function initFcDailyGrid(){
 						"data":"ENDSCANNINGTIME",
 						"targets"	:[20],
 						"render"	:function(data){
-							return formatDate(data);
+							return data;
 						}
 					},
 					{

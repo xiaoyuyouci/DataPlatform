@@ -9,14 +9,17 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
+import com.github.pagehelper.Page;
 import com.winsafe.datasource.DataSourceName;
 import com.winsafe.service.DcDailyService;
 import com.winsafe.service.DcRealtimeService;
@@ -572,11 +575,116 @@ public class ReportController {
 		map.put("itemUid", request.getParameter("itemUid"));
 		map.put("batchNo", request.getParameter("batchNo"));
 		
-		DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
-		List<Map<String, Object>> list = uidService.getUidData(map, new DataSourceName("db2"));
+		DataSourceName dsn = new DataSourceName("db2");
+		DataSourceName mysql = new DataSourceName("db3");
 		
-		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
-		AjaxUtil.ajaxReturn(val, response);
+		if(StringUtils.isNotBlank(request.getParameter("cartonUid"))){
+			DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
+			List<Map<String, Object>> list = uidService.getCartonUidBaseData(map, dsn);
+			if(list != null  && list.size()>0){
+				if(list.get(0).get("BNO") != null){
+					String bno = String.valueOf(list.get(0).get("BNO"));
+					Map<String, Object> filter = new HashMap<String, Object>();
+					filter.put("ttid", bno);
+					List<Map<String,Object>> data = uidService.getCartonUidDetailData(filter, dsn);
+					if(data != null && data.size()>0){
+						list.get(0).putAll(data.get(0));
+					}
+					else{
+						dPage.getPage().setTotal(0);
+						list.clear();
+					}
+				}
+			}
+			
+			String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
+			AjaxUtil.ajaxReturn(val, response);
+			return;
+		}
+		else if(StringUtils.isNotBlank(request.getParameter("itemUid"))){
+			DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
+			List<Map<String,Object>> list = uidService.getItemUidBaseData(map, dsn);
+			if(list != null && list.size()>0){
+				Map<String,Object> map1 = list.get(0);
+				//查询bno TT开头的那种
+				List<Map<String,Object>> bnoList = uidService.getBnoList(String.valueOf(map1.get("BATCHNO")), mysql);
+				if(bnoList !=null && bnoList.size()>0){
+					String bnos = "";
+					for(int i=0;i<bnoList.size();i++){
+						bnos = bnos +"'"+ bnoList.get(i).get("BNO")+"',";
+					}
+					bnos = bnos.substring(0,bnos.length()-1);
+					Map<String, Object> filter = new HashMap<String, Object>();
+					filter.put("bnos", bnos);
+					filter.put("productId", bnos);
+					List<Map<String,Object>> data2 = uidService.getItemUidDetailData(filter, dsn);
+					if(data2 != null && data2.size() >0){
+						for(int i=0;i<data2.size();i++){
+							data2.get(i).putAll(map);
+						}
+					}else{
+						dPage.getPage().setTotal(0);
+						list.clear();
+					}
+				}
+				else{
+					dPage.getPage().setTotal(0);
+					list.clear();
+				}
+			}
+			String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
+			AjaxUtil.ajaxReturn(val, response);
+			return;
+		}
+		else if(StringUtils.isNotBlank(request.getParameter("batchNo"))){
+			DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
+			Map<String, Object> filter = new HashMap<String, Object>();
+			filter.put("batchNo", request.getParameter("batchNo"));
+			List<Map<String,Object>> list = uidService.getBatchDetail(filter, dsn);
+			if(list !=null && list.size()>0){
+				Map<String,Object> map1 = list.get(0);
+				//查询bno TT开头的那种
+				List<Map<String,Object>> bnoList = uidService.getBnoList(request.getParameter("batchNo"), mysql);
+				if(bnoList !=null && bnoList.size()>0){
+					String bnos = "";
+					for(int i=0;i<bnoList.size();i++){
+						bnos = bnos +"'"+ bnoList.get(i).get("bno")+"',";
+					}
+					bnos = bnos.substring(0,bnos.length()-1);
+					
+					filter.clear();
+					filter.put("bnos", bnos);
+					List<Map<String,Object>> data2 = uidService.getItemUidDetailData(filter, dsn);
+					if(data2 !=null && data2.size()>0){
+						for(int i=0; i<data2.size(); i++){
+							data2.get(i).putAll(map1);
+						}
+					}else{
+						dPage.getPage().setTotal(0);
+						list.clear();
+					}
+				}
+				else{
+					dPage.getPage().setTotal(0);
+					list.clear();
+				}
+			}
+			String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
+			AjaxUtil.ajaxReturn(val, response);
+			return;
+		}
+		else{
+			com.alibaba.fastjson.JSONObject obj = new com.alibaba.fastjson.JSONObject();
+			obj.put("draw", StringUtils.isBlank(request.getParameter("draw"))? 1: (Integer.valueOf(request.getParameter("draw"))+1));
+			obj.put("legal", true);
+			obj.put("message", "数据查询成功！");
+			obj.put("notLegal", false);
+			obj.put("recordsFiltered", 0);
+			obj.put("recordsTotal", 0);
+			obj.put("result", new JSONArray());
+			AjaxUtil.ajaxReturn(obj.toJSONString(), response);
+			return;
+		}
 	}
 	
 	/**
