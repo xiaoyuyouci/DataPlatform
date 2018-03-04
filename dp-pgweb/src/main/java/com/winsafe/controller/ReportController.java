@@ -19,7 +19,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
-import com.github.pagehelper.Page;
 import com.winsafe.datasource.DataSourceName;
 import com.winsafe.service.DcDailyService;
 import com.winsafe.service.DcRealtimeService;
@@ -398,7 +397,7 @@ public class ReportController {
 	public void ajaxGetDcRealtimeGrid(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Map<String, Object>> list = dcRealtimeService.getDcRealtimeData(map, new DataSourceName("db2"));
+		List<Map<String, Object>> list = dcRealtimeService.getDcRealtimeData(map, new DataSourceName("pgdc"));
 		
 		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
 		
@@ -436,7 +435,7 @@ public class ReportController {
 		map.put("keyWord", request.getParameter("keyWord"));
 		
 		DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
-		List<Map<String, Object>> list = dcDailyService.getDcDailyData(map, new DataSourceName("db2"));
+		List<Map<String, Object>> list = dcDailyService.getDcDailyData(map, new DataSourceName("pgdc"));
 		
 		SerializeConfig serializeConfig = new SerializeConfig();
 		serializeConfig.put(java.sql.Date.class, new SimpleDateFormatSerializer("yyyy-MM-dd"));
@@ -456,7 +455,7 @@ public class ReportController {
 		map.put("batchNo", request.getParameter("batchNo"));
 		map.put("plantCode", request.getParameter("plantCode"));
 		map.put("mCode", request.getParameter("mCode"));
-		List<Map<String, Object>> list = dcDailyService.getDcDailyData(map, new DataSourceName("db2"));
+		List<Map<String, Object>> list = dcDailyService.getDcDailyData(map, new DataSourceName("pgdc"));
 		
 		try {
 			OutputStream os = response.getOutputStream();
@@ -575,7 +574,7 @@ public class ReportController {
 		map.put("itemUid", request.getParameter("itemUid"));
 		map.put("batchNo", request.getParameter("batchNo"));
 		
-		DataSourceName dsn = new DataSourceName("db2");
+		DataSourceName dsn = new DataSourceName("pgdc");
 		DataSourceName mysql = new DataSourceName("db3");
 		
 		if(StringUtils.isNotBlank(request.getParameter("cartonUid"))){
@@ -705,11 +704,36 @@ public class ReportController {
 	 */
 	@RequestMapping(value="/ajaxGetPpStatisticsGrid")
 	public void ajaxGetPpStatisticsGrid(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
-		Map<String, Object> map = new HashMap<String, Object>();
+		String currentDate = DateUtil.formatDate(DateUtil.now());
+		String d14 = DateUtil.formatDate(DateUtil.addDay(DateUtil.now(), 14));
 		
-		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
+		Map<String, Object> filter = new HashMap<String, Object>();
+		filter.put("currentDate", currentDate);
+		filter.put("d14", d14);
+		Map<String, Integer> map1 = ppStatisticsService.getPlannedDataUploadToAimia(filter, new DataSourceName("pgbc"));
+		Map<String, Integer> map2 = ppStatisticsService.getActualDataUploadToAimia(filter, new DataSourceName("pgbc"));
+		Map<String, Integer> map3 = ppStatisticsService.getPDUTA14Days(filter, new DataSourceName("pgbc"));
+		List<Map<String, Object>> list = ppStatisticsService.getIpcUploadData(filter, new DataSourceName("pgbc"));
 		
-		AjaxUtil.ajaxReturn(val, response);
+		Map<String, Object> map = null;
+		for(int i = 0; i< list.size(); i++){
+			map = list.get(i);
+			map.put("date", currentDate);
+			map.put("c1", "");
+			map.put("c2", "");
+			map.put("c3", "");
+			map.put("c4", "");
+			map.put("rowspan", i == 0? list.size(): 0);
+			map.putAll(map1);
+			map.putAll(map2);
+			map.putAll(map3);
+		}
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("part1", list);
+		
+		BaseResult br = new BaseResult(true, "查询成功", result);
+		AjaxUtil.ajaxReturn(JSON.toJSONString(br), response);
+		return;
 	}
 }

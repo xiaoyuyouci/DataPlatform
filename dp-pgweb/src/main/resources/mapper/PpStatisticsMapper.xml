@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.winsafe.dao.PsStatisticsMapper" >
-	<select id="getPsStatisticsData" resultType="map" parameterType="java.util.Map">
-		select 1 from dual
+<mapper namespace="com.winsafe.dao.PpStatisticsMapper" >
+	<select id="getIpcUploadData" resultType="map" parameterType="java.util.Map">
+		select factoryno, linesno, count(*) as ipcuploadcount 
+		from upload_produce_report 
+		where to_char(opttime, 'yyyy-mm-dd') =#{currentDate}
+		group by factoryno, linesno
+	</select>
+	<select id="getPlannedDataUploadToAimia" resultType="map" parameterType="java.util.Map">
+		select (select count(*) from upload_produce_report where opttime like '${currentDate}%' 
+		and proid  in (select id from product where ( PMSUPPLIERREGION is null OR PMSUPPLIERREGION ='CN') and 
+		(CONSUMERREGION is null OR CONSUMERREGION='CN'))) as cToC_p,
+		(select count(*) from upload_produce_report where opttime like '${currentDate}%' 
+		and proid  in (select id from product where ( PMSUPPLIERREGION ='JP') and 
+		(CONSUMERREGION is null OR CONSUMERREGION='CN'))) as jToC_p
+		from dual
+	</select>
+	<select id="getActualDataUploadToAimia" resultType="map" parameterType="java.util.Map">
+		select (select count(*) from upload_produce_report where opttime like '${currentDate}%' and uploadtoaimia='2' 
+		and proid  in (select id from product where ( PMSUPPLIERREGION is null OR PMSUPPLIERREGION ='CN') and 
+		(CONSUMERREGION is null OR CONSUMERREGION='CN'))) as cToC_a,
+		(select count(*) from upload_produce_report where opttime like '${currentDate}%' and uploadtoaimia='2' 
+		and proid  in (select id from product where ( PMSUPPLIERREGION ='JP') and 
+		(CONSUMERREGION is null OR CONSUMERREGION='CN'))
+		) as jToC_a
+		from dual
+	</select>
+	
+	<select id="getPDUTA14Days" resultType="map" parameterType="java.util.Map">
+		select count(*) as d14 from upload_produce_report where opttime like '${d14}%' 
+		and proid  in (select id from product where  CONSUMERREGION is null OR CONSUMERREGION='CN') 
 	</select>
 </mapper>

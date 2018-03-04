@@ -18,8 +18,26 @@ public class PpStatisticsServiceImpl implements PpStatisticsService {
 	
 	@Override
 	@DataSourceAnnotation
-	public List<Map<String, Object>> getPpStatisticsData(Map<String, Object> filter, DataSourceName datasource) {
-		return ppStatisticsMapper.getPpStatisticsData(filter);
+	public List<Map<String, Object>> getIpcUploadData(Map<String, Object> filter, DataSourceName datasource) {
+		return ppStatisticsMapper.getIpcUploadData(filter);
+	}
+
+	@Override
+	@DataSourceAnnotation
+	public Map<String, Integer> getPlannedDataUploadToAimia(Map<String, Object> filter, DataSourceName datasource) {
+		return ppStatisticsMapper.getPlannedDataUploadToAimia(filter);
+	}
+
+	@Override
+	@DataSourceAnnotation
+	public Map<String, Integer> getActualDataUploadToAimia(Map<String, Object> filter, DataSourceName datasource) {
+		return ppStatisticsMapper.getActualDataUploadToAimia(filter);
+	}
+
+	@Override
+	@DataSourceAnnotation
+	public Map<String, Integer> getPDUTA14Days(Map<String, Object> filter, DataSourceName datasource) {
+		return ppStatisticsMapper.getPDUTA14Days(filter);
 	}
 
 }

@@ -1,35 +1,88 @@
 $(document).ready(
 	function() {
-		$('#ppStatisticsGridQueryForm input[name="startDate"]').datetimepicker(
-			{
-				language:"zh-CN",
-				format: 'yyyy-mm-dd',
-				minView : 2,
-				autoclose : true
-			}
-		);
-		$('#ppStatisticsGridQueryForm input[name="endDate"]').datetimepicker(
-				{
-					language:"zh-CN",
-					format: 'yyyy-mm-dd',
-					minView : 2,
-					autoclose : true
-				}
-		);
+		//initFcDailyGrid();
+		getData();
 		
-		initFcDailyGrid();
-		
-		$("#btn_search").click(function(){
+		/*$("#btn_search").click(function(){
 			var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
 			$('#table_ppStatisticsGrid').DataTable().ajax.reload( function ( json ) {
 			    //这里的json返回的是服务器的数据
 				layer.close(searchLayerIndex);
 			});
-		});
+		});*/
 	}
 );
 
-function initFcDailyGrid(){
+function getData(){
+	$.ajax({
+		type: 'POST',
+		url : '/report/ajaxGetPpStatisticsGrid',
+		data: {},
+		dataType:'json',
+		success: function(data,textStatus,jqXHR){
+			//console.log(data);
+			if(data.legal == true){
+				drawTable(data.result);
+			}
+			else{
+				
+			}
+		}
+	});
+}
+
+function drawTable(data){
+	//console.log(data);
+	//console.log(data.part1);
+	var table = $('#table_ppStatisticsGrid').DataTable({
+		"sScrollX": "100%",
+		"scrollY": "400px",
+		"scrollCollapse": "true",
+		ordering:  false,
+		searching: false,
+		paging: false,
+		info: false,
+		columns: [
+		            { data: 'date' },
+		            { data: 'FACTORYNO' },
+		            { data: 'LINESNO' },
+		            { data: 'c1' },
+		            { data: 'IPCUPLOADCOUNT' },
+		            { data: 'c2' },
+		            { data: 'c3' },
+		            { data: 'c4' }
+		        ],
+		        columnDefs: [{
+		            targets: [5,6,7],
+		            createdCell: function (td, cellData, rowData, row, col) {
+		            	//console.log(rowData);
+		                var rowspan = rowData.rowspan;
+		                if (rowspan >= 1) {
+		                    $(td).attr('rowspan', rowspan);
+		                    if(col == 5){
+		                    	//console.log(rowData.CTOC_P);
+		                    	$(td).html('中国至中国:'+rowData.CTOC_P+'<br>日本至中国:'+rowData.JTOC_P);
+		                    }
+		                    else if(col == 6){
+		                    	$(td).html('中国至中国:'+rowData.CTOC_A+'<br>日本至中国:'+rowData.JTOC_A);
+		                    }
+		                    else if(col == 7){
+		                    	$(td).html(rowData.D14);
+		                    }
+		                }
+		                if (rowspan == 0) {
+		                    $(td).remove();
+		                }
+		            }
+		        }]
+	});
+	table.clear();
+	table.rows.add(data.part1).draw();
+	//console.log(table.cell(0,5).node());
+	//$(table.cell(0,5).node()).attr('rowspan', 2);
+}
+
+/*function initFcDailyGrid(){
 	$('#table_ppStatisticsGrid').DataTable({
 		"sScrollX": "100%",
 		"scrollY": "400px",
@@ -40,6 +93,9 @@ function initFcDailyGrid(){
 		searchDelay : 1000,
 		select : false,
 		ordering:  false,
+		"paging":   false,
+	    "ordering": false,
+	    "info":     false,
 		dom : 'frt<"col-sm-4"i><"col-sm-2"l><"col-sm-6"p><"clear">',
 		ajax : {
 			type : 'post',
@@ -51,7 +107,7 @@ function initFcDailyGrid(){
 					}
 				);
 			},
-			"dataSrc" : "result"
+			"dataSrc" : "result.part1"
 		},
 		columnDefs:[
 			 {
@@ -61,25 +117,17 @@ function initFcDailyGrid(){
 				    },
 					{
 						//supplier 
-						"data" : "supplier",
+						"data" : "factoryno",
 						"targets"	:	[1]
 					},
 					{
 						//线号
-						"data":"linenum",
+						"data":"linesno",
 						"targets"	:[2]
 					},
 					{
-						//ipc本地读取数据
-						"data":"ipc_local",
-						"targets"	:[3],
-						"render"	: function(){
-							return "";
-						}
-					},
-					{
 						//ipc上传数据
-						"data":"ipc_upload",
+						"data":"ipcuploadcount",
 						"targets"	:[4]
 					},
 					{
@@ -105,4 +153,4 @@ function initFcDailyGrid(){
 					}
 		]
 	});
-}
+}*/
