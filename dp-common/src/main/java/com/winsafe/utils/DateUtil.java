@@ -69,4 +69,25 @@ public class DateUtil {
 		c.add(Calendar.DAY_OF_MONTH, amount);
 		return c.getTime();
 	}
+	
+	public static Date addHour(Date date, int amount){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.HOUR_OF_DAY, amount);
+		return c.getTime();
+	}
+	
+	public static Date addMinute(Date date, int amount){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.MINUTE, amount);
+		return c.getTime();
+	}
+	
+	public static Date addSecond(Date date, int amount){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.SECOND, amount);
+		return c.getTime();
+	}
 }

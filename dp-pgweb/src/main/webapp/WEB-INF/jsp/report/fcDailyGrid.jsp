@@ -17,6 +17,13 @@
 			<div class="panel-heading">
 			<div class="row">
 				<form id="fcDailyGridQueryForm" onSubmit="return false;">
+				<!-- <div class="form-group col-md-3">
+					<select class="form-control" name="show">
+						<option value="all">显示所有数据</option>
+						<option value="error">只显示异常数据</option>
+						<option value="warning">只显示警告数据</option>
+					</select>
+				</div> -->
 				<div class="form-group col-md-2">
 					<input name="date" class="form-control" placeholder="请选择时间">
 				</div>

@@ -89,7 +89,7 @@ public class ReportController {
 		map.put("bu", request.getParameter("bu"));
 		map.put("status", request.getParameter("status"));
 		map.put("linecode", request.getParameter("linecode"));
-		List<Map<String, Object>> list = fcRealtimeService.getFcRealtimeData(map, new DataSourceName("db3"));
+		List<Map<String, Object>> list = fcRealtimeService.getFcRealtimeData(map, new DataSourceName("db1"));
 		
 		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
 		
@@ -102,7 +102,7 @@ public class ReportController {
 		map.put("bu", request.getParameter("bu"));
 		map.put("status", request.getParameter("status"));
 		map.put("linecode", request.getParameter("linecode"));
-		List<Map<String, Object>> list = fcRealtimeService.getFcRealtimeData(map, new DataSourceName("db3"));
+		List<Map<String, Object>> list = fcRealtimeService.getFcRealtimeData(map, new DataSourceName("db1"));
 		
 		try {
 			OutputStream os = response.getOutputStream();
@@ -246,7 +246,6 @@ public class ReportController {
 	 */
 	@RequestMapping(value="/ajaxGetFcDailyGrid")
 	public void ajaxGetFcDailyGrid(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("bu", request.getParameter("bu"));
 		map.put("date", request.getParameter("date"));
@@ -254,7 +253,9 @@ public class ReportController {
 		map.put("batchNo", request.getParameter("batchNo"));
 		map.put("plantCode", request.getParameter("plantCode"));
 		map.put("mCode", request.getParameter("mCode"));
-		List<Map<String, Object>> list = fcDailyService.getFcDailyData(map, new DataSourceName("db3"));
+		map.put("show", request.getParameter("show"));
+		DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
+		List<Map<String, Object>> list = fcDailyService.getFcDailyData(map, new DataSourceName("db1"));
 		
 		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
 		
@@ -270,7 +271,8 @@ public class ReportController {
 		map.put("batchNo", request.getParameter("batchNo"));
 		map.put("plantCode", request.getParameter("plantCode"));
 		map.put("mCode", request.getParameter("mCode"));
-		List<Map<String, Object>> list = fcDailyService.getFcDailyData(map, new DataSourceName("db3"));
+		map.put("show", request.getParameter("show"));
+		List<Map<String, Object>> list = fcDailyService.getFcDailyData(map, new DataSourceName("db1"));
 		
 		try {
 			OutputStream os = response.getOutputStream();
@@ -575,7 +577,7 @@ public class ReportController {
 		map.put("batchNo", request.getParameter("batchNo"));
 		
 		DataSourceName dsn = new DataSourceName("pgdc");
-		DataSourceName mysql = new DataSourceName("db3");
+		DataSourceName mysql = new DataSourceName("db1");
 		
 		if(StringUtils.isNotBlank(request.getParameter("cartonUid"))){
 			DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
