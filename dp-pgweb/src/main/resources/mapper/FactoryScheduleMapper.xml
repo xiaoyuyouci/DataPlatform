@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.FactoryScheduleMapper" >
+
+	<select id="getBatchNoFromUploadProduceReport" resultType="map" parameterType="java.util.Map">
+		SELECT DISTINCT upr.BATCHNO FROM UPLOAD_PRODUCE_REPORT upr WHERE TO_CHAR(upr.PRODATE, 'yyyy-MM-dd') = #{date, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getProductFromUploadProduceReport" resultType="map" parameterType="java.util.Map">
+		SELECT upr.batchno, pro.MCode, pro.MATERICALCHDES, pro.protype, pro.casepackage, pro.ITEMCASECONNECTION 
+		FROM PRODUCT pro, UPLOAD_PRODUCE_REPORT upr 
+		WHERE upr.fpcid = pro.id 
+		AND upr.batchno IN <foreach collection="batchList" item="item" index="index"  
+            open="(" close=")" separator=",">  
+            #{item}  
+        </foreach> 
+		GROUP BY upr.batchno, pro.casepackage, pro.MCode, pro.protype, pro.ITEMCASECONNECTION, pro.MATERICALCHDES
+	</select>
+	
+	<select id="getInfoFromUploadProduceReportItem" resultType="map" parameterType="java.util.Map">
+		SELECT upri.batchno,upri.prodate,upri.plantcode,upri.linecode,PS.SORTNAME,COUNT(upri.batchno) count1 
+		FROM PRODUCT_STRUCT ps, UPLOAD_PRODUCE_REPORT_ITEM upri, PRODUCT pro
+		WHERE upri.fpcid = pro.ID AND pro.PSID = PS.STRUCTCODE 
+		AND TO_CHAR(upri.PRODATE, 'yyyy-MM-dd') = #{date, jdbcType=VARCHAR} 
+		AND upri.batchno IN <foreach collection="batchList" item="item" index="index"  
+            open="(" close=")" separator=",">  
+            #{item}  
+        </foreach> 
+		GROUP BY upri.batchno,upri.PRODATE,upri.plantcode,upri.linecode,PS.SORTNAME
+	</select>
+	
+	<select id="getInfoFromFactoryDataContranst" resultType="map" parameterType="java.util.Map">
+		SELECT PDC.PROTDATE, pdc.factorycode,pdc.linecode,PS.SORTNAME,pdc.FPCBATCH,pdc.ckqrnum ckqrnum1,pdc.elqrnum elqrnum1,pdc.scannum scannum1,pdc.actualnum actualnum1,PDC.DATATYPE
+    	FROM FACTORY_DATA_CONTRAST pdc, PRODUCT_STRUCT ps 
+    	WHERE pdc.businessunit = PS.STRUCTCODE 
+    	AND TO_CHAR(PDC.PROTDATE, 'yyyy-MM-dd') = #{date, jdbcType=VARCHAR} 
+    	AND PDC.datatype='Item' AND PDC.FPCBATCH in <foreach collection="batchList" item="item" index="index"  
+            open="(" close=")" separator=",">  
+            #{item}  
+        </foreach>
+	</select>
+	
+	<select id="getData5List" resultType="map" parameterType="java.util.Map">
+		SELECT upr.batchno,upr.prodate,upr.plantcode,upr.linecode,PS.SORTNAME, COUNT(upr.batchno) count2
+		FROM PRODUCT_STRUCT ps, UPLOAD_PRODUCE_REPORT upr, PRODUCT pro 
+		WHERE upr.fpcid = pro.ID AND pro.PSID = PS.STRUCTCODE
+		AND TO_CHAR(upr.PRODATE, 'yyyy-MM-dd')= #{date, jdbcType=VARCHAR} 
+		AND upr.batchno IN <foreach collection="batchList" item="item" index="index"  
+            open="(" close=")" separator=",">  
+            #{item}  
+        </foreach>
+		GROUP BY upr.batchno,upr.PRODATE,upr.plantcode,upr.linecode,PS.SORTNAME
+	</select>
+	
+	<select id="getData6List" resultType="map" parameterType="java.util.Map">
+		SELECT PDC.PROTDATE,pdc.factorycode,pdc.linecode,PS.SORTNAME,pdc.FPCBATCH, pdc.ckqrnum ckqrnum2,pdc.elqrnum elqrnum2,pdc.scannum scannum2,pdc.actualnum actualnum2,PDC.DATATYPE 
+		FROM FACTORY_DATA_CONTRAST pdc,PRODUCT_STRUCT ps
+		WHERE pdc.businessunit = PS.STRUCTCODE 
+		AND TO_CHAR(PDC.PROTDATE, 'yyyy-MM-dd') = #{date, jdbcType=VARCHAR}
+		AND PDC.datatype='Case'
+		AND PDC.FPCBATCH in <foreach collection="batchList" item="item" index="index"  
+            open="(" close=")" separator=",">  
+            #{item}  
+        </foreach>
+	</select>
+	
+	<select id="getListBySql" resultType="map" parameterType="java.util.Map">
+		${sql}
+	</select>
+	
+	<insert id="insertListBySql" parameterType="java.util.Map">
+		${sql}
+	</insert>
+
+	<select id="getFcRealtimeBatchs" resultType="map" parameterType="java.util.Map">
+		SELECT DISTINCT upr.BATCHNO, max(UPR.OPTTIME) as up_time 
+		FROM UPLOAD_PRODUCE_REPORT upr 
+		WHERE upr.OPTTIME &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') 
+		and upr.OPTTIME &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') 
+		GROUP BY UPR.BATCHNO
+	</select>
+	
+	<select id="getFcrtData2List" resultType="map" parameterType="java.util.Map">
+		SELECT upr.batchno,pro.MCode,pro.MATERICALCHDES,PRO.protype,pro.casepackage,pro.ITEMCASECONNECTION 
+		FROM PRODUCT pro,UPLOAD_PRODUCE_REPORT upr 
+		WHERE upr.fpcid = pro. ID 
+		AND batchno IN <foreach collection="batchList" item="item" index="index"  
+            open="(" close=")" separator=",">  
+            #{item}  
+        </foreach>
+		GROUP BY upr.batchno,pro.casepackage,PRO.MCode,PRO.protype,pro.ITEMCASECONNECTION,pro.MATERICALCHDES
+	</select>
+	
+	<select id="getFcrtData3List" resultType="map" parameterType="java.util.Map">
+	SELECT upri.batchno,upri.prodate,upri.plantcode,upri.linecode,PS.SORTNAME,COUNT(upri.batchno) count1 
+	FROM PRODUCT_STRUCT ps,UPLOAD_PRODUCE_REPORT_ITEM upri,PRODUCT pro
+    WHERE upri.fpcid = pro.ID AND pro.PSID = PS.STRUCTCODE 
+    <if test="start != null and start !=''"> AND  upri.OPTTIME &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
+	<if test="end != null and end !=''"> and upri.OPTTIME &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
+    <if test="batchList != null and batchList.size()>0">
+    	AND upri.batchno IN <foreach collection="batchList" item="item" index="index"  
+            open="(" close=")" separator=",">  
+            #{item}  
+        </foreach>
+    </if>
+    GROUP BY upri.batchno,upri.PRODATE,upri.plantcode,upri.linecode,PS.SORTNAME
+	</select>
+	
+	<select id="getFcrtData4List" resultType="map" parameterType="java.util.Map">
+		SELECT PDC.PROTDATE,pdc.factorycode,pdc.linecode,PS.SORTNAME,pdc.FPCBATCH,pdc.ckqrnum ckqrnum1,pdc.elqrnum elqrnum1,pdc.scannum scannum1,pdc.actualnum actualnum1,PDC.DATATYPE
+    	FROM FACTORY_DATA_CONTRAST pdc,PRODUCT_STRUCT ps 
+    	WHERE pdc.businessunit = PS.STRUCTCODE 
+      		AND pdc.datatype='Item' 
+      		<if test="start != null and start !=''"> and pdc.uploaddate &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
+      		<if test="end != null and end !=''">and pdc.uploaddate &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
+      		<if test="batchList != null and batchList.size()>0">
+      			AND pdc.FPCBATCH in 
+      			<foreach collection="batchList" item="item" index="index"  open="(" close=")" separator=",">  
+            		#{item}  
+        		</foreach>
+        	</if>
+	</select>
+	
+	<select id="getFcrtData5List" resultType="map" parameterType="java.util.Map">
+		SELECT upr.batchno,upr.prodate,upr.plantcode,upr.linecode,PS.SORTNAME,COUNT(upr.batchno) count2
+  		FROM PRODUCT_STRUCT ps,UPLOAD_PRODUCE_REPORT upr,PRODUCT pro 
+  		WHERE upr.fpcid = pro.ID AND pro.PSID = PS.STRUCTCODE
+      		<if test="start != null and start !=''"> AND upr.OPTTIME &gt;= to_date(#{start, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')  </if>
+      		<if test="end != null and end !=''"> and upr.OPTTIME &lt;= to_date(#{end, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')  </if>
+  			<if test="batchList != null and batchList.size()>0">
+  				AND upr.batchno IN 
+  				<foreach collection="batchList" item="item" index="index" open="(" close=")" separator=",">  
+            		#{item}  
+        		</foreach>
+        	</if>
+        GROUP BY upr.batchno,upr.PRODATE,upr.plantcode,upr.linecode,PS.SORTNAME
+	</select>
+	
+	<select id="getFcrtData6List" resultType="map" parameterType="java.util.Map">
+		SELECT PDC.PROTDATE,pdc.factorycode,pdc.linecode,PS.SORTNAME,pdc.FPCBATCH, pdc.ckqrnum ckqrnum2,pdc.elqrnum elqrnum2,pdc.scannum scannum2,pdc.actualnum actualnum2,PDC.DATATYPE 
+		FROM FACTORY_DATA_CONTRAST pdc,PRODUCT_STRUCT ps 
+  		WHERE pdc.businessunit = PS.STRUCTCODE 
+  			AND PDC.datatype='Case' 
+     		<if test="start != null and start !=''"> AND pdc.uploaddate &gt;= to_date(#{start, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss') </if>
+     		<if test="end != null and end !=''"> and pdc.uploaddate &lt;= to_date(#{end, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')  </if>
+  			<if test="batchList != null and batchList.size()>0">
+  				AND PDC.FPCBATCH in 
+  				<foreach collection="batchList" item="item" index="index" open="(" close=")" separator=",">  
+            		#{item}  
+	        	</foreach>
+	        </if>
+	</select>
+	
+	 <update id="updateFaRealtimeStatus">
+	 	update fa_realtime set status = 0 where 2>1
+	 </update>
+	 
+	 <update id="updateFaRealtime" parameterType="com.winsafe.schedule.FactoryRealtime" >
+	 	update fa_realtime 
+	 	set status = 1,batchno = #{batchno,jdbcType=VARCHAR}, case_item =#{case_item,jdbcType=VARCHAR},mcode = #{fpc,jdbcType=VARCHAR},productname = #{productname,jdbcType=VARCHAR},
+    	ckqrnum1 = #{ckqrnum1,jdbcType=INTEGER},elqrnum1 = #{elqrnum1,jdbcType=INTEGER},scannum1 = #{scannum1,jdbcType=INTEGER},
+    	count1 = #{count1,jdbcType=INTEGER},ckqrnum2 = #{ckqrnum2,jdbcType=INTEGER},elqrnum2 = #{elqrnum2,jdbcType=INTEGER},scannum2 = #{scannum2,jdbcType=INTEGER},
+    	count2 = #{count2,jdbcType=INTEGER},item_percent = #{item_percent,jdbcType=INTEGER},case_percent = #{case_percent,jdbcType=INTEGER},
+    	real_package = #{real_package,jdbcType=FLOAT},case_package = #{real_package,jdbcType=FLOAT},istrue = #{is_true,jdbcType=VARCHAR},
+    	up_time = #{up_time,jdbcType=VARCHAR}
+    	where linecode = #{linecode,jdbcType=VARCHAR} and plantcode = #{plantcode,jdbcType=VARCHAR} and bu = #{bu,jdbcType=VARCHAR}
+	 </update>
+	 
+	 <update id="updateFaRealtime2" parameterType="com.winsafe.schedule.FactoryRealtime" >
+	 	update fa_realtime set status = 1,
+		ckqrnum1 = #{ckqrnum1,jdbcType=INTEGER},elqrnum1 = #{elqrnum1,jdbcType=INTEGER},scannum1 = #{scannum1,jdbcType=INTEGER},
+    	count1 = #{count1,jdbcType=INTEGER},ckqrnum2 = #{ckqrnum2,jdbcType=INTEGER},elqrnum2 = #{elqrnum2,jdbcType=INTEGER},scannum2 = #{scannum2,jdbcType=INTEGER},
+    	count2 = #{count2,jdbcType=INTEGER},item_percent = #{item_percent,jdbcType=INTEGER},case_percent = #{case_percent,jdbcType=INTEGER},
+    	real_package = #{real_package,jdbcType=FLOAT},case_package = #{real_package,jdbcType=FLOAT},istrue = #{is_true,jdbcType=VARCHAR}
+   		where batchno = #{batchno,jdbcType=VARCHAR}
+	 </update>
+	 
+	<select id="getFaRealtimeIfStatusIsSuspended" resultType="com.winsafe.schedule.FactoryRealtime" parameterType="java.util.Map">
+		select * from fa_realtime where status = 0 and length(batchno) > 0
+	</select>
+</mapper>
