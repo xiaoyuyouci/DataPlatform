@@ -89,7 +89,7 @@ public class ReportController {
 		map.put("bu", request.getParameter("bu"));
 		map.put("status", request.getParameter("status"));
 		map.put("linecode", request.getParameter("linecode"));
-		List<Map<String, Object>> list = fcRealtimeService.getFcRealtimeData(map, new DataSourceName("db1"));
+		List<Map<String, Object>> list = fcRealtimeService.getFcRealtimeData(map, new DataSourceName("primary"));
 		
 		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
 		
@@ -102,7 +102,7 @@ public class ReportController {
 		map.put("bu", request.getParameter("bu"));
 		map.put("status", request.getParameter("status"));
 		map.put("linecode", request.getParameter("linecode"));
-		List<Map<String, Object>> list = fcRealtimeService.getFcRealtimeData(map, new DataSourceName("db1"));
+		List<Map<String, Object>> list = fcRealtimeService.getFcRealtimeData(map, new DataSourceName("primary"));
 		
 		try {
 			OutputStream os = response.getOutputStream();
@@ -255,7 +255,7 @@ public class ReportController {
 		map.put("mCode", request.getParameter("mCode"));
 		map.put("show", request.getParameter("show"));
 		DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
-		List<Map<String, Object>> list = fcDailyService.getFcDailyData(map, new DataSourceName("db1"));
+		List<Map<String, Object>> list = fcDailyService.getFcDailyData(map, new DataSourceName("primary"));
 		
 		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
 		
@@ -272,7 +272,7 @@ public class ReportController {
 		map.put("plantCode", request.getParameter("plantCode"));
 		map.put("mCode", request.getParameter("mCode"));
 		map.put("show", request.getParameter("show"));
-		List<Map<String, Object>> list = fcDailyService.getFcDailyData(map, new DataSourceName("db1"));
+		List<Map<String, Object>> list = fcDailyService.getFcDailyData(map, new DataSourceName("primary"));
 		
 		try {
 			OutputStream os = response.getOutputStream();
@@ -576,18 +576,18 @@ public class ReportController {
 		map.put("itemUid", request.getParameter("itemUid"));
 		map.put("batchNo", request.getParameter("batchNo"));
 		
-		DataSourceName dsn = new DataSourceName("pgdc");
-		DataSourceName mysql = new DataSourceName("db1");
+		DataSourceName pgdc = new DataSourceName("pgdc");
+		DataSourceName mysql = new DataSourceName("primary");
 		
 		if(StringUtils.isNotBlank(request.getParameter("cartonUid"))){
 			DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
-			List<Map<String, Object>> list = uidService.getCartonUidBaseData(map, dsn);
+			List<Map<String, Object>> list = uidService.getCartonUidBaseData(map, pgdc);
 			if(list != null  && list.size()>0){
 				if(list.get(0).get("BNO") != null){
 					String bno = String.valueOf(list.get(0).get("BNO"));
 					Map<String, Object> filter = new HashMap<String, Object>();
 					filter.put("ttid", bno);
-					List<Map<String,Object>> data = uidService.getCartonUidDetailData(filter, dsn);
+					List<Map<String,Object>> data = uidService.getCartonUidDetailData(filter, pgdc);
 					if(data != null && data.size()>0){
 						list.get(0).putAll(data.get(0));
 					}
@@ -604,7 +604,7 @@ public class ReportController {
 		}
 		else if(StringUtils.isNotBlank(request.getParameter("itemUid"))){
 			DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
-			List<Map<String,Object>> list = uidService.getItemUidBaseData(map, dsn);
+			List<Map<String,Object>> list = uidService.getItemUidBaseData(map, pgdc);
 			if(list != null && list.size()>0){
 				Map<String,Object> map1 = list.get(0);
 				//查询bno TT开头的那种
@@ -618,7 +618,7 @@ public class ReportController {
 					Map<String, Object> filter = new HashMap<String, Object>();
 					filter.put("bnos", bnos);
 					filter.put("productId", bnos);
-					List<Map<String,Object>> data2 = uidService.getItemUidDetailData(filter, dsn);
+					List<Map<String,Object>> data2 = uidService.getItemUidDetailData(filter, pgdc);
 					if(data2 != null && data2.size() >0){
 						for(int i=0;i<data2.size();i++){
 							data2.get(i).putAll(map);
@@ -641,7 +641,7 @@ public class ReportController {
 			DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
 			Map<String, Object> filter = new HashMap<String, Object>();
 			filter.put("batchNo", request.getParameter("batchNo"));
-			List<Map<String,Object>> list = uidService.getBatchDetail(filter, dsn);
+			List<Map<String,Object>> list = uidService.getBatchDetail(filter, pgdc);
 			if(list !=null && list.size()>0){
 				Map<String,Object> map1 = list.get(0);
 				//查询bno TT开头的那种
@@ -655,7 +655,7 @@ public class ReportController {
 					
 					filter.clear();
 					filter.put("bnos", bnos);
-					List<Map<String,Object>> data2 = uidService.getItemUidDetailData(filter, dsn);
+					List<Map<String,Object>> data2 = uidService.getItemUidDetailData(filter, pgdc);
 					if(data2 !=null && data2.size()>0){
 						for(int i=0; i<data2.size(); i++){
 							data2.get(i).putAll(map1);

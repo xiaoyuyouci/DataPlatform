@@ -1,8 +1,14 @@
 package com.winsafe.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Permission {
+/**
+ * 系统权限Model
+ * @author Ryan
+ *
+ */
+public class Permission implements Serializable {
     private Integer id;
 
     private Integer creator;

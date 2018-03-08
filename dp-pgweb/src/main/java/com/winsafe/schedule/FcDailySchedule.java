@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.winsafe.datasource.DataSourceName;
@@ -26,7 +27,7 @@ public class FcDailySchedule {
 	@Autowired
 	private FactoryScheduleService service;
 	
-	//@Scheduled(cron="0 0 5 * * ?")//每天凌晨五点统计上一天的数据存入缓存数据库中
+	@Scheduled(cron="0 0 5 * * ?")//每天凌晨五点统计上一天的数据存入缓存数据库中
 	public void factoryDailyData(){
 		
 		//获取当前日期的前一天
@@ -252,7 +253,7 @@ public class FcDailySchedule {
 			System.out.println(sql);
 			filter.clear();
 			filter.put("sql", sql);
-			service.insertListBySql(filter, new DataSourceName("db1"));
+			service.insertListBySql(filter, new DataSourceName("primary"));
 			value = "";
 			k++;
 		}

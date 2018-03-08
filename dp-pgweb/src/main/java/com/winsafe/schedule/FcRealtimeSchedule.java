@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.winsafe.datasource.DataSourceName;
@@ -30,17 +31,17 @@ public class FcRealtimeSchedule {
 	/**
 	 * 工厂实时状态 监测一个时间段是否有上传数据（设定为2个小时）
 	 */
-	//@Scheduled(cron="0 0 0/2 * * ?")
+	@Scheduled(cron="0 0 0/2 * * ?")
 	public void updateRealtime(){
 		
-		//String start = DateUtil.formatDatetime(DateUtil.addHour(DateUtil.now(), -2));
-		//String end = DateUtil.formatDatetime(DateUtil.now());
+		String start = DateUtil.formatDatetime(DateUtil.addHour(DateUtil.now(), -2));
+		String end = DateUtil.formatDatetime(DateUtil.now());
 		
-		String start = "2017-05-11 09:19:04";
-		String end = "2017-05-11 11:19:04";
+		//String start = "2017-05-11 09:19:04";
+		//String end = "2017-05-11 11:19:04";
 		
 		DataSourceName pgdc = new DataSourceName("pgdc");
-		DataSourceName db1 = new DataSourceName("db1");
+		DataSourceName primary = new DataSourceName("primary");
 		
 		//用来存储最后拼凑好的数组
 		Map<String,Map<String,Object>> result = new HashMap<String,Map<String,Object>>();
@@ -125,7 +126,7 @@ public class FcRealtimeSchedule {
 		}
 		if(result !=null && result.size()>0){
 			//先将所有产线状态改为暂停
-			service.updateFaRealtimeStatus(db1);
+			service.updateFaRealtimeStatus(primary);
 			
 			String value = "";
 			//更新之前先将状态设置为暂停
@@ -213,14 +214,14 @@ public class FcRealtimeSchedule {
 					value = "Y";
 				}
 				fr.setIs_true(value);
-				service.updateFaRealtime(fr, db1);
+				service.updateFaRealtime(fr, primary);
 				value = "";
 			}
 			//先完成新上传的批次号的更新
 			System.out.println("Finish the first update factory_realtime data!");
 			
 			//更新暂停中的批次号的数量变更，如果数量发生改变则在这两个小时之内也有新的数据上传
-			List<FactoryRealtime> frList = service.getFaRealtimeIfStatusIsSuspended(db1);
+			List<FactoryRealtime> frList = service.getFaRealtimeIfStatusIsSuspended(primary);
 			if(frList != null && frList.size() > 0){
 				//查询这些批次号的数量是否有改变
 				Map<String,Map<String,Object>> res = new HashMap<String,Map<String,Object>>();
@@ -388,7 +389,7 @@ public class FcRealtimeSchedule {
 								value = "Y";
 							}
 							fr.setIs_true(value);
-							service.updateFaRealtime2(fr, db1);
+							service.updateFaRealtime2(fr, primary);
 							System.out.println("Finish update number!");
 						}
 						flag = false;

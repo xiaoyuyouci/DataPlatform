@@ -9,6 +9,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>dp-pgweb</artifactId>
+	<packaging>war</packaging>
 	<name>dp-pgweb</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
@@ -38,6 +39,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<useSystemClassLoader>false</useSystemClassLoader>
+					<skip>true</skip>
 				</configuration>
 			</plugin>
 		</plugins>

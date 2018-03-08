@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.winsafe.dao.FactoryScheduleMapper" >
 
+	<select id="getListBySql" resultType="map" parameterType="java.util.Map">
+		${sql}
+	</select>
+	
+	<insert id="insertListBySql" parameterType="java.util.Map">
+		${sql}
+	</insert>
+
 	<select id="getBatchNoFromUploadProduceReport" resultType="map" parameterType="java.util.Map">
 		SELECT DISTINCT upr.BATCHNO FROM UPLOAD_PRODUCE_REPORT upr WHERE TO_CHAR(upr.PRODATE, 'yyyy-MM-dd') = #{date, jdbcType=VARCHAR}
 	</select>
@@ -63,14 +71,6 @@
             #{item}  
         </foreach>
 	</select>
-	
-	<select id="getListBySql" resultType="map" parameterType="java.util.Map">
-		${sql}
-	</select>
-	
-	<insert id="insertListBySql" parameterType="java.util.Map">
-		${sql}
-	</insert>
 
 	<select id="getFcRealtimeBatchs" resultType="map" parameterType="java.util.Map">
 		SELECT DISTINCT upr.BATCHNO, max(UPR.OPTTIME) as up_time 
@@ -178,4 +178,5 @@
 	<select id="getFaRealtimeIfStatusIsSuspended" resultType="com.winsafe.schedule.FactoryRealtime" parameterType="java.util.Map">
 		select * from fa_realtime where status = 0 and length(batchno) > 0
 	</select>
+	
 </mapper>

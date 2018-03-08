@@ -48,3 +48,14 @@ insert into permission(name, nameCn, url, filter, level, deletable) values('perm
 insert into permission(name, nameCn, url, filter, level, deletable) values('permission:add', '新增权限', '/permission/addPermission', 'authc', 0, 0);
 insert into permission(name, nameCn, url, filter, level, deletable) values('permission:del', '删除权限', '/permission/ajaxDelPermission', 'authc', 0, 0);
 insert into permission(name, nameCn, url, filter, level, deletable) values('permission:edit', '编辑权限', '/permission/editPermission', 'authc', 0, 0);
+
+
+
+insert into permission(name, nameCn, url, filter, level, deletable) values('report:list', '我的报表', '', 'none', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('report:fcRealtimeGrid', '工厂实时状态', '/report/fcRealtimeGrid', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('report:fcDailyGrid', '工厂每日状态', '/report/fcDailyGrid', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('report:dcRealtimeGrid', 'DC实时状态', '/report/dcRealtimeGrid', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('report:dcDailyGrid', 'DC每日状态', '/report/dcDailyGrid', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('report:uidGrid', 'UID查询', '/report/uidGrid', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('report:ppStatisticsGrid', '包材厂数据统计', '/report/ppStatisticsGrid', 'authc', 0, 0);
+

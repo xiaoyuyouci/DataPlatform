@@ -3,6 +3,11 @@ package com.winsafe.model;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 系统用户Model
+ * @author Ryan
+ *
+ */
 public class User implements Serializable {
 
 	private Integer id;

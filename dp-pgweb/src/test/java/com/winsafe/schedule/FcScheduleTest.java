@@ -16,13 +16,21 @@ public class FcScheduleTest {
 	@Autowired
 	private FcRealtimeSchedule fcRealtimeSchedule;
 	
-	@Test
+	@Autowired
+	private UpdateBnoTmpSchedule updateBnoTmpSchedule;
+	
+	//@Test
     public void test1(){
 		fcSchedule.factoryDailyData();
 	}
 	
-	@Test
+	//@Test
     public void test2(){
 		fcRealtimeSchedule.updateRealtime();
+	}
+	
+	//@Test
+	public void test3(){
+		updateBnoTmpSchedule.updateBnoTmp();
 	}
 }

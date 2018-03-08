@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.UpdBnoTmpScheduleMapper" >
+
+	<select id="getListBySql" resultType="map" parameterType="java.util.Map">
+		${sql}
+	</select>
+	
+	<insert id="insertListBySql" parameterType="java.util.Map">
+		${sql}
+	</insert>
+	
+	<insert id="insertBnoTmp" parameterType="java.util.Map">
+		insert into bno_tmp(bno, batchno)
+		select * from (
+		<foreach collection="list" item="item" index="index" open="" close="" separator=" union ">  
+            select #{item.BNO}, #{item.BATCH} from dual  
+        </foreach>
+        ) tmp
+	</insert>
+	
+	<select id="getMaxIdOfUploadIdcodeTemporary" resultType="java.lang.Long">
+		select max(id) as id from upload_idcode_temporary
+	</select>
+	
+	<select id="selectBnoAndPbatchFromUploadIdcodeTemporary" resultType="map">
+		select distinct * from (
+			select bno, pbatch as batch
+			from upload_idcode_temporary
+			<where>
+				pbatch is not null
+				<if test="minId != null"> and id&gt;=#{minId, jdbcType=INTEGER}</if>
+				<if test="maxId != null"> and id&lt;=#{maxId, jdbcType=INTEGER}</if>
+			</where>
+			order by id asc
+		)
+	</select>
+	
+</mapper>
