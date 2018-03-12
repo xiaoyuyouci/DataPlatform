@@ -18,4 +18,41 @@
 		from take_ticket_idcode tti, (select carton_code from primary_code where fwmcode=#{fileName, jdbcType=VARCHAR}) cc
 		where tti.idcode=cc.carton_code
 	</select>
+	
+	<select id="getQrCodeUsageRate" resultType="map" parameterType="java.util.Map">
+		<choose>
+			<when test="getFileList">
+				select uidcount as applycount, to_char(createtime, 'yyyy-MM-dd') as applydate, filename, 0 as uploadcount, 0 as outcount
+				from factory_code_apply_log fcal
+				<where>
+					fcal.status=1
+					<if test="startDate != null and startDate !=''"> and createtime &gt;= to_date(#{startDate, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')</if>
+					<if test="endDate != null and endDate !=''"> and createtime &lt;= to_date(#{endDate, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')</if>
+				</where>
+				order by createtime
+			</when>
+			<when test="getUploadInfo">
+				select fwmcode as filename, count(carton_code) as uploadcount
+				from upload_produce_report upr, 
+				(select fwmcode, carton_code from primary_code where fwmcode in 
+					<foreach collection="fileList" item="item" index="index"  open="(" close=")" separator=",">  
+            			#{item, jdbcType=VARCHAR}
+        			</foreach>
+        		) cc
+        		where upr.boxcode=cc.carton_code
+        		group by fwmcode
+			</when>
+			<when test="getOutInfo">
+				select fwmcode as filename, count(carton_code) as outcount
+				from take_ticket_idcode tti, 
+				(select fwmcode, carton_code from primary_code where fwmcode in 
+					<foreach collection="fileList" item="item" index="index"  open="(" close=")" separator=",">  
+            			#{item, jdbcType=VARCHAR}
+        			</foreach>
+        		) cc
+        		where tti.idcode=cc.carton_code
+        		group by fwmcode
+			</when>
+		</choose>
+	</select>
 </mapper>

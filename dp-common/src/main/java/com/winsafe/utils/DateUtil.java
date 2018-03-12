@@ -63,6 +63,27 @@ public class DateUtil {
 		return new Date();
 	}
 	
+	public static Date addYear(Date date, int amount){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.YEAR, amount);
+		return c.getTime();
+	}
+	
+	public static Date addMonth(Date date, int amount){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.MONTH, amount);
+		return c.getTime();
+	}
+	
+	public static Date addWeek(Date date, int amount){
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		c.add(Calendar.WEEK_OF_MONTH, amount);
+		return c.getTime();
+	}
+	
 	public static Date addDay(Date date, int amount){
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
