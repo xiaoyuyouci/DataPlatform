@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.DcQrCodeTimeConsumingMapper" >
+	<select id="getAppliedFileInfo" resultType="map" parameterType="java.util.Map">
+		select to_char(fcal.createtime, 'YYYY-MM-DD HH24:MI:SS') createtime, fcal.uidcount as applycount, fcal.filename
+		from factory_code_apply_log fcal, (select fwmcode from primary_code where carton_code=#{qrCode, jdbcType=VARCHAR}) f 
+		where fcal.filename=f.fwmcode
+	</select>
+	
+	<select id="getUploadProduceReportInfo" resultType="map" parameterType="java.util.Map">
+		select to_char(max(makedate), 'YYYY-MM-DD HH24:MI:SS') lastuploaddate, count(*) uploadcount
+		from upload_produce_report upr, (select carton_code from primary_code where fwmcode=#{fileName, jdbcType=VARCHAR}) cc
+		where upr.boxcode=cc.carton_code
+	</select>
+	
+	<select id="getOutInfo" resultType="map" parameterType="java.util.Map">
+		select count(*) outcount 
+		from take_ticket_idcode tti, (select carton_code from primary_code where fwmcode=#{fileName, jdbcType=VARCHAR}) cc
+		where tti.idcode=cc.carton_code
+	</select>
+</mapper>

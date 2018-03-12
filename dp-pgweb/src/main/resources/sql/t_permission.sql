@@ -56,6 +56,7 @@ insert into permission(name, nameCn, url, filter, level, deletable) values('repo
 insert into permission(name, nameCn, url, filter, level, deletable) values('report:fcDailyGrid', '工厂每日状态', '/report/fcDailyGrid', 'authc', 0, 0);
 insert into permission(name, nameCn, url, filter, level, deletable) values('report:dcRealtimeGrid', 'DC实时状态', '/report/dcRealtimeGrid', 'authc', 0, 0);
 insert into permission(name, nameCn, url, filter, level, deletable) values('report:dcDailyGrid', 'DC每日状态', '/report/dcDailyGrid', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('report:dcQrCodeTimeConsuming', 'DC耗时查询', '/report/dcQrCodeTimeConsuming', 'authc', 0, 0);
 insert into permission(name, nameCn, url, filter, level, deletable) values('report:uidGrid', 'UID查询', '/report/uidGrid', 'authc', 0, 0);
 insert into permission(name, nameCn, url, filter, level, deletable) values('report:ppStatisticsGrid', '包材厂数据统计', '/report/ppStatisticsGrid', 'authc', 0, 0);
 

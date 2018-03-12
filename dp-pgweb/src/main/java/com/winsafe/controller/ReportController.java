@@ -21,6 +21,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
 import com.winsafe.datasource.DataSourceName;
 import com.winsafe.service.DcDailyService;
+import com.winsafe.service.DcQrCodeTimeConsumingService;
 import com.winsafe.service.DcRealtimeService;
 import com.winsafe.service.FactoryDailyService;
 import com.winsafe.service.FactoryRealtimeService;
@@ -65,6 +66,9 @@ public class ReportController {
 	
 	@Autowired
 	private PpStatisticsService ppStatisticsService;
+	
+	@Autowired
+	private DcQrCodeTimeConsumingService dcQrCodeTimeConsumingService;
 	
 	/**
 	 * 工厂实时状态表格
@@ -551,6 +555,67 @@ public class ReportController {
 		workbook.write();
 		workbook.close();
 		os.close();
+	}
+	
+	/**
+	 * DC耗时查询
+	 * @return
+	 */
+	@RequestMapping("/dcQrCodeTimeConsuming")
+	public String toDcQrCodeTimeConsuming() {
+		return "report/dcQrCodeTimeConsuming"; 
+	}
+	
+	/**
+	 * 获取DC码申请的文件数据
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ajaxGetDcAppliedFileInfo")
+	public void ajaxGetDcAppliedFileInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String qrCode = request.getParameter("qrCode");
+		Map<String, Object> filter = new HashMap<String, Object>();
+		filter.put("qrCode", qrCode);
+		Map<String, Object> map = dcQrCodeTimeConsumingService.getAppliedFileInfo(filter, new DataSourceName("pgdc"));
+		
+		BaseResult br = new BaseResult(true, "查询成功", map);
+		AjaxUtil.ajaxReturn(JSON.toJSONString(br, SerializerFeature.WriteMapNullValue), response);
+		return;
+	}
+	/**
+	 * 获取DC生产数据上传数据
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ajaxGetDcUploadProduceReportInfo")
+	public void ajaxGetDcUploadProduceReportInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String fileName = request.getParameter("fileName");
+		Map<String, Object> filter = new HashMap<String, Object>();
+		filter.put("fileName", fileName);
+		Map<String, Object> map = dcQrCodeTimeConsumingService.getUploadProduceReportInfo(filter, new DataSourceName("pgdc"));
+		
+		BaseResult br = new BaseResult(true, "查询成功", map);
+		AjaxUtil.ajaxReturn(JSON.toJSONString(br, SerializerFeature.WriteMapNullValue), response);
+		return;
+	}
+	/**
+	 * 获取DC出库数量数据
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/ajaxGetDcOutInfo")
+	public void ajaxGetDcOutInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		String fileName = request.getParameter("fileName");
+		Map<String, Object> filter = new HashMap<String, Object>();
+		filter.put("fileName", fileName);
+		Map<String, Object> map = dcQrCodeTimeConsumingService.getOutInfo(filter, new DataSourceName("pgdc"));
+		
+		BaseResult br = new BaseResult(true, "查询成功", map);
+		AjaxUtil.ajaxReturn(JSON.toJSONString(br, SerializerFeature.WriteMapNullValue), response);
+		return;
 	}
 	
 	/**

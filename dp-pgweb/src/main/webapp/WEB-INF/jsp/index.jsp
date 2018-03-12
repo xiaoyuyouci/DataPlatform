@@ -89,6 +89,7 @@
                                 <shiro:hasPermission name="report:fcDailyGrid"><li><a class="hah" href="report/fcDailyGrid"> 工厂每日状态</a></li></shiro:hasPermission>
                                 <shiro:hasPermission name="report:dcRealtimeGrid"><li><a class="hah" href="report/dcRealtimeGrid"> DC实时状态</a></li></shiro:hasPermission>
                                 <shiro:hasPermission name="report:dcDailyGrid"><li><a class="hah" href="report/dcDailyGrid"> DC每日状态</a></li></shiro:hasPermission>
+                                <shiro:hasPermission name="report:dcQrCodeTimeConsuming"><li><a class="hah" href="report/dcQrCodeTimeConsuming"> DC耗时查询</a></li></shiro:hasPermission>
                                 <shiro:hasPermission name="report:uidGrid"><li><a class="hah" href="report/uidGrid"> UID查询</a></li></shiro:hasPermission>
                                 <shiro:hasPermission name="report:ppStatisticsGrid"><li><a class="hah" href="report/ppStatisticsGrid"> 包材厂数据统计</a></li></shiro:hasPermission>
                             </ul>
