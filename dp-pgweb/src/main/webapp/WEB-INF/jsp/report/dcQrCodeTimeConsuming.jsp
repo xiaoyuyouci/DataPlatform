@@ -22,22 +22,31 @@
 
 			<div class="panel-body">
 				<div>
-					<label>条码所在文件：</label><label style="color:grey" id="label_fileName">请先查询QR码...</label>
+					<label>条码所在文件：</label><label style="color:grey" id="label_fileName">...</label>
 				</div>
 				<div>
-					<label>此文件申请的时间：</label><label style="color:grey" id="label_applyDate">请先查询QR码...</label>
+					<label>此文件申请的时间：</label><label style="color:grey" id="label_applyDate">...</label>
 				</div>
 				<div>
-					<label>此文件条码申请的数量：</label><label style="color:grey" id="label_applyCount">请先查询QR码...</label>
+					<label>此文件条码申请的数量：</label><label style="color:grey" id="label_applyCount">...</label>
 				</div>
 				<div>
-					<label>此文件条码已经生产的数量：</label><label style="color:grey" id="label_uploadCount">请先查询QR码...</label>
+					<label>此文件条码首次生产的时间：</label><label style="color:grey" id="label_firstUploadDate">...</label>
 				</div>
 				<div>
-					<label>此文件条码最后生产的时间：</label><label style="color:grey" id="label_lastUploadDate">请先查询QR码...</label>
+					<label>此文件条码最后生产的时间：</label><label style="color:grey" id="label_lastUploadDate">...</label>
 				</div>
 				<div>
-					<label>此文件条码已经出库的数量：</label><label style="color:grey" id="label_outCount">请先查询QR码...</label>
+					<label>此文件条码已经生产的数量：</label><label style="color:grey" id="label_uploadCount">...</label>
+				</div>
+				<div>
+					<label>此文件条码首次出库的时间：</label><label style="color:grey" id="label_firstOutDate">...</label>
+				</div>
+				<div>
+					<label>此文件条码最后出库的时间：</label><label style="color:grey" id="label_lastOutDate">...</label>
+				</div>
+				<div>
+					<label>此文件条码已经出库的数量：</label><label style="color:grey" id="label_outCount">...</label>
 				</div>
 			</div>
 			<!-- /.panel-body -->

@@ -9,11 +9,8 @@ $(document).ready(
 				}
 				updateLabelValToSearching();
 				getAppliedFileInfo();
-				console.log('1');
 				getUploadProduceReportInfo();
-				console.log('2');
 				getOutInfo();
-				console.log('3');
 			});
 		}
 );
@@ -64,11 +61,17 @@ function getUploadProduceReportInfo(){
 			async: true,
 			success: function(data){
 				if(data.legal == true){
-					if(data.result == null || data.result.LASTUPLOADDATE == null || data.result.LASTUPLOADDATE==''){
+					if(data.result == null || data.result.LASTPRODATE == null || data.result.LASTPRODATE==''){
 						$("label[id='label_lastUploadDate']").html('未查到数据');
 					}
 					else{
-						$("label[id='label_lastUploadDate']").html(data.result.LASTUPLOADDATE);
+						$("label[id='label_lastUploadDate']").html(data.result.LASTPRODATE);
+					}
+					if(data.result == null || data.result.FIRSTPRODATE == null || data.result.FIRSTPRODATE==''){
+						$("label[id='label_firstUploadDate']").html('未查到数据');
+					}
+					else{
+						$("label[id='label_firstUploadDate']").html(data.result.FIRSTPRODATE);
 					}
 					if(data.result == null || data.result.UPLOADCOUNT == null || data.result.UPLOADCOUNT==''){
 						$("label[id='label_uploadCount']").html('未查到数据');
@@ -97,12 +100,22 @@ function getOutInfo(){
 			dataType: 'json',
 			async: true,
 			success: function(data){
-				console.log(data);
+				//console.log(data);
 				if(data.legal == true){
 					if(data.result == null || data.result.OUTCOUNT == null || data.result.OUTCOUNT==''){
 					}
 					else{
 						$("label[id='label_outCount']").html(data.result.OUTCOUNT);
+					}
+					if(data.result == null || data.result.FIRSTOUTDATE == null || data.result.FIRSTOUTDATE==''){
+					}
+					else{
+						$("label[id='label_firstOutDate']").html(data.result.FIRSTOUTDATE);
+					}
+					if(data.result == null || data.result.LASTOUTDATE == null || data.result.LASTOUTDATE==''){
+					}
+					else{
+						$("label[id='label_lastOutDate']").html(data.result.LASTOUTDATE);
 					}
 				}
 				else{

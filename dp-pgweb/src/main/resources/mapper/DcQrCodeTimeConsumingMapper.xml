@@ -8,13 +8,13 @@
 	</select>
 	
 	<select id="getUploadProduceReportInfo" resultType="map" parameterType="java.util.Map">
-		select to_char(max(makedate), 'YYYY-MM-DD HH24:MI:SS') lastuploaddate, count(*) uploadcount
+		select to_char(min(prodate), 'YYYY-MM-DD HH24:MI:SS') firstprodate, to_char(max(prodate), 'YYYY-MM-DD HH24:MI:SS') lastprodate, count(*) uploadcount
 		from upload_produce_report upr, (select carton_code from primary_code where fwmcode=#{fileName, jdbcType=VARCHAR}) cc
 		where upr.boxcode=cc.carton_code
 	</select>
 	
 	<select id="getOutInfo" resultType="map" parameterType="java.util.Map">
-		select count(*) outcount 
+		select count(*) outcount, to_char(min(makedate), 'YYYY-MM-DD HH24:MI:SS') firstoutdate, to_char(max(makedate), 'YYYY-MM-DD HH24:MI:SS') lastoutdate
 		from take_ticket_idcode tti, (select carton_code from primary_code where fwmcode=#{fileName, jdbcType=VARCHAR}) cc
 		where tti.idcode=cc.carton_code
 	</select>
