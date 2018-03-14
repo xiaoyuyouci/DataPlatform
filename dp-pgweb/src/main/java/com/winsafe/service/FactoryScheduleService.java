@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.winsafe.annotation.DataSourceAnnotation;
 import com.winsafe.dao.FactoryScheduleMapper;
@@ -94,6 +95,7 @@ public class FactoryScheduleService {
 	}
 	
 	@DataSourceAnnotation
+	@Transactional
 	public int insertListBySql(Map<String, Object> filter, DataSourceName datasource){
 		return factoryScheduleMapper.insertListBySql(filter);
 	}
@@ -108,37 +110,46 @@ public class FactoryScheduleService {
 	public List<Map<String, Object>> getFcRealtimeBatchs(Map<String, Object> filter, DataSourceName datasource){
 		return factoryScheduleMapper.getFcRealtimeBatchs(filter);
 	}
+	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData2List(Map<String, Object> filter, DataSourceName datasource){
 		return factoryScheduleMapper.getFcrtData2List(filter);
 	}
+	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData3List(Map<String, Object> filter, DataSourceName datasource){
 		return factoryScheduleMapper.getFcrtData3List(filter);
 	}
+	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData4List(Map<String, Object> filter, DataSourceName datasource){
 		return factoryScheduleMapper.getFcrtData4List(filter);
 	}
+	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData5List(Map<String, Object> filter, DataSourceName datasource){
 		return factoryScheduleMapper.getFcrtData5List(filter);
 	}
+	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData6List(Map<String, Object> filter, DataSourceName datasource){
 		return factoryScheduleMapper.getFcrtData6List(filter);
 	}
+	
 	@DataSourceAnnotation
+	@Transactional
 	public int updateFaRealtimeStatus(DataSourceName datasource){
 		return factoryScheduleMapper.updateFaRealtimeStatus();
 	}
 	
 	@DataSourceAnnotation
+	@Transactional
 	public int updateFaRealtime(FactoryRealtime obj, DataSourceName datasource){
 		return factoryScheduleMapper.updateFaRealtime(obj);
 	}
 	
 	@DataSourceAnnotation
+	@Transactional
 	public int updateFaRealtime2(FactoryRealtime obj, DataSourceName datasource){
 		return factoryScheduleMapper.updateFaRealtime2(obj);
 	}

@@ -46,7 +46,7 @@ function initDcPast6Month(){
 		searchDelay : 1000,
 		select : false,
 		ordering:  false,
-		"lengthMenu": [[5, 10, 15, 20], [5, 10, 15, 20]],
+		//"lengthMenu": [[5, 10, 15, 20], [5, 10, 15, 20]],
 		dom : 'frt<"col-sm-4"i><"col-sm-2"l><"col-sm-6"p><"clear">',
 		"processing": true,
 		"language": {
@@ -65,11 +65,15 @@ function initDcPast6Month(){
 			"dataSrc" : "result",
 		},
 		"columns": [
-	            { "data": "FILENAME" },
-			            { "data": "APPLYDATE" }, 
-			            { "data": "APPLYCOUNT" },
-			            { "data": "UPLOADCOUNT" },
-			            { "data": "OUTCOUNT" }
+	            { "data": "filename" },
+			    { "data": "applytime" }, 
+			    { "data": "applycount" },
+			    { "data": "firstuploadtime" },
+			    { "data": "lastuploadtime" },
+			    { "data": "uploadcount" },
+			    { "data": "firstouttime" },
+			    { "data": "lastouttime" },
+			    { "data": "outcount" }
 	    ]
 	});
 }

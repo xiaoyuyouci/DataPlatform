@@ -23,6 +23,7 @@ import com.alibaba.fastjson.serializer.SimpleDateFormatSerializer;
 import com.winsafe.datasource.DataSourceName;
 import com.winsafe.service.DcDailyService;
 import com.winsafe.service.DcQrCodeTimeConsumingService;
+import com.winsafe.service.DcQrCodeUsageRatioService;
 import com.winsafe.service.DcRealtimeService;
 import com.winsafe.service.FactoryDailyService;
 import com.winsafe.service.FactoryRealtimeService;
@@ -70,6 +71,9 @@ public class ReportController {
 	
 	@Autowired
 	private DcQrCodeTimeConsumingService dcQrCodeTimeConsumingService;
+	
+	@Autowired
+	private DcQrCodeUsageRatioService dcQrCodeUsageRatioService;
 	
 	/**
 	 * 工厂实时状态表格
@@ -630,43 +634,14 @@ public class ReportController {
 		Map<String, Object> filter = new HashMap<String, Object>();
 		filter.put("startDate", DateUtil.formatDatetime(DateUtil.addMonth(DateUtil.now(), -6)));
 		filter.put("endDate", DateUtil.formatDatetime(DateUtil.now()));
-		filter.put("getFileList", true);
 		DatatablePage dPage = DatatablePageHelper.getDatatableViewPageNoOrder(request);
-		List<Map<String, Object>> list = dcQrCodeTimeConsumingService.getQrCodeUsageRate(filter, new DataSourceName("pgdc"));
+		List<Map<String, Object>> list = dcQrCodeUsageRatioService.selectQrCodeUsageRate(filter);
 		
-		List<String> fileList = new ArrayList<String>();
-		for(Map<String, Object> map: list){
-			fileList.add(String.valueOf(map.get("FILENAME")));
-		}
+		SerializeConfig serializeConfig = new SerializeConfig();
+		serializeConfig.put(java.sql.Date.class, new SimpleDateFormatSerializer("yyyy-MM-dd HH:mm:ss"));
+		serializeConfig.put(java.sql.Timestamp.class, new SimpleDateFormatSerializer("yyyy-MM-dd HH:mm:ss"));
 		
-		filter.clear();
-		filter.put("getUploadInfo", true);
-		filter.put("fileList", fileList);
-		List<Map<String, Object>> uploadInfoList = dcQrCodeTimeConsumingService.getQrCodeUsageRate(filter, new DataSourceName("pgdc"));
-		Map<String, Object> uploadInfoMap = new HashMap<String, Object>();
-		for(Map<String, Object> map: uploadInfoList){
-			uploadInfoMap.put(String.valueOf(map.get("FILENAME")), map.get("UPLOADCOUNT"));
-		}
-		
-		filter.clear();
-		filter.put("getOutInfo", true);
-		filter.put("fileList", fileList);
-		List<Map<String, Object>> outInfoList = dcQrCodeTimeConsumingService.getQrCodeUsageRate(filter, new DataSourceName("pgdc"));
-		Map<String, Object> outInfoMap = new HashMap<String, Object>();
-		for(Map<String, Object> map: outInfoList){
-			outInfoMap.put(String.valueOf(map.get("FILENAME")), map.get("OUTCOUNT"));
-		}
-		
-		for(Map<String, Object> map: list){
-			if(uploadInfoMap.containsKey(map.get("FILENAME"))){
-				map.put("UPLOADCOUNT", uploadInfoMap.get(map.get("FILENAME")));
-			}
-			if(outInfoMap.containsKey(map.get("FILENAME"))){
-				map.put("OUTCOUNT", outInfoMap.get(map.get("FILENAME")));
-			}
-		}
-		
-		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), SerializerFeature.WriteMapNullValue);
+		String val = JSON.toJSONString(new DatatableViewPage(true, "数据查询成功！", dPage), serializeConfig, SerializerFeature.WriteMapNullValue);
 		AjaxUtil.ajaxReturn(val, response);
 		return;
 	}

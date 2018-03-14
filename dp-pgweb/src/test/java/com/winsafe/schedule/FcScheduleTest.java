@@ -19,6 +19,9 @@ public class FcScheduleTest {
 	@Autowired
 	private UpdateBnoTmpSchedule updateBnoTmpSchedule;
 	
+	@Autowired
+	private DcQrCodeUsageRatioSchedule dcQrCodeUsageRatioSchedule;
+	
 	//@Test
     public void test1(){
 		fcSchedule.factoryDailyData();
@@ -32,5 +35,10 @@ public class FcScheduleTest {
 	//@Test
 	public void test3(){
 		updateBnoTmpSchedule.updateBnoTmp();
+	}
+	
+	@Test
+	public void test4(){
+		dcQrCodeUsageRatioSchedule.execute();
 	}
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.DcQrCodeUsageRatioMapper" >
+	<select id="selectQrCodeUsageRate" resultType="map" parameterType="java.util.Map">
+		select filename, applytime, applycount, firstuploadtime, lastuploadtime, uploadcount, firstouttime, lastouttime, outcount
+		from dc_qrcodeusageratio
+		<where>
+			<if test="startDate != null and startDate !=''"> and applytime &gt;= DATE_FORMAT(#{startDate, jdbcType=VARCHAR}, "%Y-%m-%d %T")</if>
+			<if test="endDate != null and endDate !=''"> and applytime &lt;= DATE_FORMAT(#{endDate, jdbcType=VARCHAR}, "%Y-%m-%d %T")</if>
+			<if test="filename != null and filename !=''"> and filename = #{filename, jdbcType=VARCHAR}</if>
+		</where>
+	</select>
+	
+	<update id="updateQrCodeUsageRate" parameterType="java.util.Map">
+		update dc_qrcodeusageratio t1, (
+			<foreach collection="list" item="item" index="index"  open="" close="" separator=" union ">  
+            	select #{item.filename, jdbcType=VARCHAR} as filename, #{item.firstuploadtime, jdbcType=TIMESTAMP} as firstuploadtime, #{item.lastuploadtime, jdbcType=TIMESTAMP} as lastuploadtime, #{item.uploadcount, jdbcType=INTEGER} as uploadcount, #{item.firstouttime, jdbcType=TIMESTAMP} as firstouttime, #{item.lastouttime, jdbcType=TIMESTAMP} as lastouttime, #{item.outcount, jdbcType=INTEGER} as outcount
+            	from dual
+        	</foreach>) t2
+        set t1.firstuploadtime=t2.firstuploadtime, t1.lastuploadtime=t2.lastuploadtime, t1.uploadcount=t2.uploadcount, t1.firstouttime=t2.firstouttime, t1.lastouttime=t2.lastouttime, t1.outcount=t2.outcount
+        where t2.filename=t1.filename
+	</update>
+	
+	<insert id="insertQrCodeUsageRate" parameterType="java.util.Map">
+		insert into dc_qrcodeusageratio(creationtime, filename, applytime, applycount)
+		select now(), tmp.filename, tmp.applytime, tmp.applycount
+		from (
+			<foreach collection="list" item="item" index="index"  open="" close="" separator=" union ">  
+            	select #{item.filename, jdbcType=VARCHAR} as filename, #{item.applytime, jdbcType=TIMESTAMP} as applytime, #{item.applycount, jdbcType=INTEGER} as applycount
+            	from dual
+        	</foreach>
+		) tmp
+		where tmp.filename not in (select filename from dc_qrcodeusageratio)
+	</insert>
+	
+	<select id="getFileInfo" resultType="map" parameterType="java.util.Map">
+		select fcal.filename, fcal.createtime as applytime, fcal.uidcount as applycount
+		from factory_code_apply_log fcal
+		<where>
+			fcal.status=1
+			<if test="startDate != null and startDate !=''"> and createtime &gt;= to_date(#{startDate, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')</if>
+			<if test="endDate != null and endDate !=''"> and createtime &lt;= to_date(#{endDate, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')</if>
+			<if test="filename != null and filename !=''"> and filename = #{filename, jdbcType=VARCHAR}</if>
+		</where>
+		order by fcal.createtime
+	</select>
+	
+	<select id="getUploadInfo" resultType="map" parameterType="java.util.Map">
+		select cc.fwmcode as filename, count(carton_code) as uploadcount, min(upr.prodate) as firstuploadtime, max(upr.prodate) as lastuploadtime
+		from upload_produce_report upr, 
+			(select fwmcode, carton_code from primary_code where fwmcode in 
+					<foreach collection="list" item="item" index="index"  open="(" close=")" separator=",">  
+            			#{item.filename, jdbcType=VARCHAR}
+        			</foreach>
+      		) cc
+     	where upr.boxcode=cc.carton_code
+    	group by fwmcode
+	</select>
+	
+	<select id="getOutInfo" resultType="map" parameterType="java.util.Map">
+		select fwmcode as filename, count(carton_code) as outcount, min(tti.makedate) as firstouttime, max(tti.makedate) as lastouttime
+		from take_ticket_idcode tti, 
+		(select fwmcode, carton_code from primary_code where fwmcode in 
+			<foreach collection="list" item="item" index="index"  open="(" close=")" separator=",">  
+          		#{item.filename, jdbcType=VARCHAR}
+       		</foreach>
+        ) cc
+        where tti.idcode=cc.carton_code
+        group by fwmcode
+	</select>
+</mapper>
