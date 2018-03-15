@@ -43,7 +43,7 @@
 	</select>
 	
 	<select id="getBnoList" resultType="map" parameterType="java.util.Map">
-		SELECT bno from bno_tmp where batchno = #{batchNo, jdbcType=VARCHAR} group by bno
+		SELECT bno from dc_bnotmp where batchno = #{batchNo, jdbcType=VARCHAR} group by bno
 	</select>
 	
 	<select id="getItemUidDetailData" resultType="map" parameterType="java.util.Map">

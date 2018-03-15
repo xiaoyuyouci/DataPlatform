@@ -53,7 +53,7 @@ public class UpdateBnoTmpSchedule {
 			return;
 		}
 		
-		//从upload_idcode_temporary获取数据，存入bno_tmp并更新resource中的值
+		//从upload_idcode_temporary获取数据，存入dc_bnotmp并更新resource中的值
 		long step = 10000;
 		Map<String, Object> filter = new HashMap<String, Object>();
 		while(lastId < maxId){

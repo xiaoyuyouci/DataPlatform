@@ -19,3 +19,4 @@ create table resource
 alter table resource comment '资源表';
 
 insert into resource(sname, skey, creationtime, svalue, level, memo) values('upd_bnotemp', 'lastid', now(), '0', 0, '更新Bno_tmp表。upload_idcode_temporary已经用过的ID');
+insert into resource(sname, skey, creationtime, svalue, level, memo) values('dc_qrCodeUsageRatio', 'startDateOffset', now(), '-6', 0, '从DC数据库获取QR码文件申请日志的开始查找时间限制。单位月份。');

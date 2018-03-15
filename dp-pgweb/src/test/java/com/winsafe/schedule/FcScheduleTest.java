@@ -37,7 +37,7 @@ public class FcScheduleTest {
 		updateBnoTmpSchedule.updateBnoTmp();
 	}
 	
-	@Test
+	//@Test
 	public void test4(){
 		dcQrCodeUsageRatioSchedule.execute();
 	}

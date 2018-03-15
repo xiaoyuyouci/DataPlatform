@@ -122,7 +122,7 @@ public class FcDailySchedule {
 		int  k =1;
 		for(Map<String,Object> map : result.values()){
 			long kn=0,hn=0,pn=0,mn=0;
-			String sql = "insert into dayreport values('"+date+"',";
+			String sql = "insert into dc_dayreport values('"+date+"',";
 			
 			value = String.valueOf(map.get("PLANTCODE"));//工厂
 			value = value==null || value.equals("null")? "":value;

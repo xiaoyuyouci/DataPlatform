@@ -17,14 +17,14 @@
 		<choose>
 			<when test="(bu != null and bu !='') or (linecode != null and linecode !='') or (batchno != null and batchno !='') or (plantcode != null and plantcode !='') or (mcode != null and mcode !='')">
 				select * 
-				from (select * from dayreport <include refid="where-condition"/>) as f 
-				LEFT JOIN (SELECT DISTINCT r_bu,r_plantcode,r_linecode from factory_realtime ) as d 
+				from (select * from dc_dayreport <include refid="where-condition"/>) as f 
+				LEFT JOIN (SELECT DISTINCT r_bu,r_plantcode,r_linecode from dc_factoryrealtime ) as d 
 				on (f.bu =d.r_bu  and f.plantcode = d.r_plantcode  and f.linecode = d.r_linecode )
 			</when>
 			<otherwise>
 				select * 
-				from ( SELECT DISTINCT r_bu,r_plantcode,r_linecode from factory_realtime GROUP BY r_bu,r_plantcode,r_linecode) as f 
-				LEFT JOIN (select * from dayreport <where><if test="date != null and date !=''"> and date=#{date, jdbcType=VARCHAR}</if></where> ) as d
+				from ( SELECT DISTINCT r_bu,r_plantcode,r_linecode from dc_factoryrealtime GROUP BY r_bu,r_plantcode,r_linecode) as f 
+				LEFT JOIN (select * from dc_dayreport <where><if test="date != null and date !=''"> and date=#{date, jdbcType=VARCHAR}</if></where> ) as d
 				on f.r_bu = d.bu and f.r_plantcode = d.plantcode and f.r_linecode = d.linecode
 			</otherwise>
 		</choose>

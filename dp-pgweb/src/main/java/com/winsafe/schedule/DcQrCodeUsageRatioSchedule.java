@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.winsafe.datasource.DataSourceName;
+import com.winsafe.model.Resource;
 import com.winsafe.service.DcQrCodeUsageRatioService;
+import com.winsafe.service.ResourceService;
 import com.winsafe.utils.DateUtil;
 import com.winsafe.utils.MapUtil;
 
@@ -24,6 +27,9 @@ public class DcQrCodeUsageRatioSchedule {
 	@Autowired
 	private DcQrCodeUsageRatioService service;
 
+	@Autowired
+	private ResourceService resourceService;
+	
 	@Scheduled(cron="0 0 0/8 * * ?")
     public void execute() {
         
@@ -41,7 +47,7 @@ public class DcQrCodeUsageRatioSchedule {
         
         //按条件从dc_qrcodeusageratio获取文件信息
         filter.clear();
-        filter.put("startDate", DateUtil.formatDatetime(DateUtil.addMonth(DateUtil.now(), -6)));
+        filter.put("startDate", DateUtil.formatDatetime(DateUtil.addMonth(DateUtil.now(), getStartDateOffset())));
         List<Map<String, Object>> fList = MapUtil.toLowerCaseKey(service.selectQrCodeUsageRate(filter));
         
         //从DC获取上传信息
@@ -74,4 +80,15 @@ public class DcQrCodeUsageRatioSchedule {
         
 		service.updateQrCodeUsageRate(filter);
     }
+	
+	private int getStartDateOffset(){
+	   	Resource record = new Resource();
+    	record.setSname("dc_qrCodeUsageRatio");
+    	record.setSkey("startDateOffset");
+    	Resource r = resourceService.selectBySnameAndSkey(record);
+    	if(r == null || StringUtils.isBlank(r.getSvalue())){
+    		return 0;
+    	}
+    	return Integer.valueOf(r.getSvalue());
+	}
 }

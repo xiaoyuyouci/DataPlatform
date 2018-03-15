@@ -11,7 +11,7 @@
 	</insert>
 	
 	<insert id="insertBnoTmp" parameterType="java.util.Map">
-		insert into bno_tmp(bno, batchno)
+		insert into dc_bnotmp(bno, batchno)
 		select * from (
 		<foreach collection="list" item="item" index="index" open="" close="" separator=" union ">  
             select #{item.BNO}, #{item.BATCH} from dual  

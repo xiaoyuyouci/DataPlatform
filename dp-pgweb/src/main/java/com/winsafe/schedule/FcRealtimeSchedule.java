@@ -218,7 +218,7 @@ public class FcRealtimeSchedule {
 				value = "";
 			}
 			//先完成新上传的批次号的更新
-			System.out.println("Finish the first update factory_realtime data!");
+			System.out.println("Finish the first update dc_factoryrealtime data!");
 			
 			//更新暂停中的批次号的数量变更，如果数量发生改变则在这两个小时之内也有新的数据上传
 			List<FactoryRealtime> frList = service.getFaRealtimeIfStatusIsSuspended(primary);
