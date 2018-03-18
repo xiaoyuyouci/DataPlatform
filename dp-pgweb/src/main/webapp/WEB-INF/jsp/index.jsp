@@ -105,6 +105,9 @@
 						<shiro:hasPermission name="permission:list">
 							<li><a class="hah" href="permission/listPermission"><i class="fa fa-gear fa-fw"></i> 权限管理</a></li>
 						</shiro:hasPermission>
+						<shiro:hasPermission name="scheduleJob:list">
+							<li><a class="hah" href="scheduleJob/listScheduleJob"><i class="fa fa-gear fa-fw"></i> 定时任务</a></li>
+						</shiro:hasPermission>
 					</ul>
 				</div>
                 <!-- /.sidebar-collapse -->

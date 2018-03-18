@@ -20,4 +20,6 @@ public interface ResourceService {
     List<Resource> selectResourceList(Resource record);
     
     Resource selectBySnameAndSkey(Resource record);
+    
+    Resource selectBySnameAndSkey(String name, String key);
 }

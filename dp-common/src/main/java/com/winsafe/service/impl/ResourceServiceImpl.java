@@ -59,4 +59,12 @@ public class ResourceServiceImpl implements ResourceService {
 	public Resource selectBySnameAndSkey(Resource record) {
 		return resourceMapper.selectBySnameAndSkey(record);
 	}
+
+	@Override
+	public Resource selectBySnameAndSkey(String name, String key) {
+		Resource record = new Resource();
+		record.setSname(name);
+		record.setSkey(key);
+		return resourceMapper.selectBySnameAndSkey(record);
+	}
 }

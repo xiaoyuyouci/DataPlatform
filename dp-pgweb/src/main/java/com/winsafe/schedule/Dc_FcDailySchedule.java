@@ -22,12 +22,12 @@ import com.winsafe.utils.DateUtil;
  *
  */
 @Component
-public class FcDailySchedule {
+public class Dc_FcDailySchedule {
 
 	@Autowired
 	private FactoryScheduleService service;
 	
-	@Scheduled(cron="0 0 5 * * ?")//每天凌晨五点统计上一天的数据存入缓存数据库中
+	//@Scheduled(cron="0 0 5 * * ?")//每天凌晨五点统计上一天的数据存入缓存数据库中
 	public void factoryDailyData(){
 		
 		//获取当前日期的前一天

@@ -23,9 +23,9 @@ import com.winsafe.service.UpdBnoTmpScheduleService;
  *
  */
 @Component
-public class UpdateBnoTmpSchedule {
+public class Dc_UpdateBnoTmpSchedule {
 
-	private static final Logger logger = LogManager.getLogger(UpdateBnoTmpSchedule.class);
+	private static final Logger logger = LogManager.getLogger(Dc_UpdateBnoTmpSchedule.class);
 	
 	@Autowired
 	private ResourceService resourceService;
@@ -33,7 +33,7 @@ public class UpdateBnoTmpSchedule {
 	@Autowired
 	private UpdBnoTmpScheduleService updBnoTmpScheduleService;
 	
-	@Scheduled(cron="0 0 0/2 * * ?")
+	//@Scheduled(cron="0 0 0/2 * * ?")
 	public void updateBnoTmp(){
 		Resource record = new Resource();
 		record.setSname("upd_bnotemp");

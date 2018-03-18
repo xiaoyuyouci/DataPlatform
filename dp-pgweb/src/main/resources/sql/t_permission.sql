@@ -49,7 +49,12 @@ insert into permission(name, nameCn, url, filter, level, deletable) values('perm
 insert into permission(name, nameCn, url, filter, level, deletable) values('permission:del', '删除权限', '/permission/ajaxDelPermission', 'authc', 0, 0);
 insert into permission(name, nameCn, url, filter, level, deletable) values('permission:edit', '编辑权限', '/permission/editPermission', 'authc', 0, 0);
 
-
+insert into permission(name, nameCn, url, filter, level, deletable) values('scheduleJob:list', '查看定时任务', '/scheduleJob/listScheduleJob', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('scheduleJob:add', '新增定时任务', '/scheduleJob/addScheduleJob', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('scheduleJob:del', '删除定时任务', '/scheduleJob/ajaxDelScheduleJob', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('scheduleJob:edit', '编辑定时任务', '/scheduleJob/editScheduleJob', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('scheduleJob:start', '运行定时任务', '/scheduleJob/startScheduleJob', 'authc', 0, 0);
+insert into permission(name, nameCn, url, filter, level, deletable) values('scheduleJob:stop', '挂起定时任务', '/scheduleJob/stopScheduleJob', 'authc', 0, 0);
 
 insert into permission(name, nameCn, url, filter, level, deletable) values('report:list', '我的报表', '', 'none', 0, 0);
 insert into permission(name, nameCn, url, filter, level, deletable) values('report:fcRealtimeGrid', '工厂实时状态', '/report/fcRealtimeGrid', 'authc', 0, 0);

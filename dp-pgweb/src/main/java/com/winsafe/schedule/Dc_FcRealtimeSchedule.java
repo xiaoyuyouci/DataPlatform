@@ -23,7 +23,7 @@ import com.winsafe.utils.DateUtil;
  *
  */
 @Component
-public class FcRealtimeSchedule {
+public class Dc_FcRealtimeSchedule {
 
 	@Autowired
 	private FactoryScheduleService service;
@@ -31,7 +31,7 @@ public class FcRealtimeSchedule {
 	/**
 	 * 工厂实时状态 监测一个时间段是否有上传数据（设定为2个小时）
 	 */
-	@Scheduled(cron="0 0 0/2 * * ?")
+	//@Scheduled(cron="0 0 0/2 * * ?")
 	public void updateRealtime(){
 		
 		String start = DateUtil.formatDatetime(DateUtil.addHour(DateUtil.now(), -2));

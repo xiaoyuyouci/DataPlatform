@@ -22,7 +22,7 @@ import com.winsafe.utils.MapUtil;
  *
  */
 @Component
-public class DcQrCodeUsageRatioSchedule {
+public class Dc_QrCodeUsageRatioSchedule {
 
 	@Autowired
 	private DcQrCodeUsageRatioService service;
@@ -30,7 +30,7 @@ public class DcQrCodeUsageRatioSchedule {
 	@Autowired
 	private ResourceService resourceService;
 	
-	@Scheduled(cron="0 0 0/8 * * ?")
+	//@Scheduled(cron="0 0 0/8 * * ?")
     public void execute() {
         
     	Map<String, Object> filter = new HashMap<String, Object>();

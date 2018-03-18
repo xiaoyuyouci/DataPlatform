@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.winsafe.dao.ScheduleJobMapper" >
+  	<sql id="tablename">
+		schedulejob
+	</sql>
+
+	<sql id="from-table">
+		from schedulejob
+	</sql>
+	
+	<sql id="id">
+		id
+	</sql>
+  
+  	<sql id="where-condition">
+  		<where>
+  			<if test="id != null"> and id=#{id} </if>
+	  		<if test="jobGroup != null and jobGroup != ''"> and jobgroup=#{jobGroup}</if>
+	  		<if test="jobName != null and jobName != ''"> and jobname=#{jobName}</if>
+	  		<if test="jobStatus != null and jobStatus != ''"> and jobstatus=#{jobStatus}</if>
+	  		<if test="springId != null and springId != ''"> and springid=#{springId}</if>
+	  		<if test="beanClass != null and beanClass != ''"> and beanclass=#{beanClass}</if>
+	  		<if test="methodName != null and methodName != ''"> and methodname=#{methodName}</if>
+	  		<if test="isConcurrent != null and isConcurrent != ''"> and isconcurrent=#{isConcurrent}</if>
+	  		<if test="searchVal != null and searchVal !=''"> and (jobname like '%${searchVal}%' or jobgroup like '%${searchVal}%')</if>
+	  	</where>
+  	</sql>
+  
+   <select id="selectByPrimaryKey" resultType="com.winsafe.model.ScheduleJob" parameterType="java.lang.Integer" >
+    select *
+    <include refid="from-table" />
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  	<select id="selectScheduleJobList" parameterType="com.winsafe.model.ScheduleJob" resultType="com.winsafe.model.ScheduleJob" >
+		select * <include refid="from-table" />
+		<include refid="where-condition"/>
+	</select>	  
+  
+  	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    	delete <include refid="from-table"/>
+    	where id = #{id,jdbcType=INTEGER}
+  	</delete>
+  
+  <insert id="insert" parameterType="com.winsafe.model.ScheduleJob" useGeneratedKeys="true" keyProperty="id">
+    insert into <include refid="tablename"></include> (id, CREATOR, 
+      creationtime, modifier, modificationtime, 
+      jobname, jobgroup, jobstatus, 
+      cronexpression, description, beanclass, 
+      isconcurrent, springid, methodname
+      )
+    values (#{id,jdbcType=INTEGER}, #{creator,jdbcType=VARCHAR}, 
+      #{creationTime,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, #{modificationTime,jdbcType=TIMESTAMP}, 
+      #{jobName,jdbcType=VARCHAR}, #{jobGroup,jdbcType=VARCHAR}, #{jobStatus,jdbcType=VARCHAR}, 
+      #{cronExpression,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{beanClass,jdbcType=VARCHAR}, 
+      #{isConcurrent,jdbcType=VARCHAR}, #{springId,jdbcType=VARCHAR}, #{methodName,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.winsafe.model.ScheduleJob" >
+    update <include refid="tablename"></include>
+    set creator = #{creator,jdbcType=VARCHAR},
+      creationtime = #{creationTime,jdbcType=TIMESTAMP},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      modificationtime = #{modificationTime,jdbcType=TIMESTAMP},
+      jobname = #{jobName,jdbcType=VARCHAR},
+      jobgroup = #{jobGroup,jdbcType=VARCHAR},
+      jobstatus = #{jobStatus,jdbcType=VARCHAR},
+      cronexpression = #{cronExpression,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      beanclass = #{beanClass,jdbcType=VARCHAR},
+      isconcurrent = #{isConcurrent,jdbcType=VARCHAR},
+      springid = #{springId,jdbcType=VARCHAR},
+      methodname = #{methodName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>
