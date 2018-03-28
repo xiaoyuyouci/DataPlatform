@@ -32,6 +32,7 @@
 							<th>编号</th>
 							<th>任务组</th>
 					        <th>任务名称</th>
+					        <th>描述</th>
 					        <th>是否同时执行</th>
 					        <th>运行状态(内存)</th>
 					        <th>运行状态(数据库)</th>
@@ -39,7 +40,6 @@
 					        <th>SpringId</th>
 					        <th>执行类</th>
 					        <th>类方法</th>
-					        <th>描述</th>
 						</tr>
 					</thead>
 					<tbody>

@@ -55,32 +55,32 @@ function initDatatable(){
 				columns : [ {data : "id"}, 
 				            {data : "jobGroup"},
 				            {data : "jobName"},
+				            {data : "description"},
 				            {data : "isConcurrent"},
 				            {data : "jobStatusInMemory"},
 				            {data : "jobStatus"},
 				            {data : "cronExpression"},
 				            {data : "springId"},
 				            {data : "beanClass"},
-				            {data : "methodName"},
-				            {data : "description"}
+				            {data : "methodName"}
 				],
 				columnDefs:[
 					{ 
-						"targets": [3], // 目标列位置，下标从0开始
+						"targets": [4], // 目标列位置，下标从0开始
 						"data": "isConcurrent", // 数据列名
 						"render": function(data, type, full){
 							return (data != null && data == '1')? "是": "否";
 						}
 					},
 					{ 
-						"targets": [4], // 目标列位置，下标从0开始
+						"targets": [5], // 目标列位置，下标从0开始
 						"data": "jobStatusInMemory", // 数据列名
 						"render": function(data, type, full){
 							return (data != null && data == '1')? "是": "否";
 						}
 					},
 					{ 
-						"targets": [5], // 目标列位置，下标从0开始
+						"targets": [6], // 目标列位置，下标从0开始
 						"data": "jobStatus", // 数据列名
 						"render": function(data, type, full){
 							return (data != null && data == '1')? "是": "否";
