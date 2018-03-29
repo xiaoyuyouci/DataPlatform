@@ -38,7 +38,7 @@ public class FcScheduleTest {
 		fcSchedule.factoryDailyData();
 	}
 	
-	//@Test
+	@Test
     public void test2(){
 		fcRealtimeSchedule.updateRealtime();
 	}

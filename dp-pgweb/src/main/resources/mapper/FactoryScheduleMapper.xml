@@ -75,15 +75,17 @@
 	<select id="getFcRealtimeBatchs" resultType="map" parameterType="java.util.Map">
 		SELECT DISTINCT upr.BATCHNO, max(UPR.OPTTIME) as up_time 
 		FROM UPLOAD_PRODUCE_REPORT upr 
-		WHERE upr.OPTTIME &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') 
-		and upr.OPTTIME &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') 
+		<where>
+			<if test="start != null and start !=''"> and upr.OPTTIME &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
+			<if test="end != null and end !=''"> and upr.OPTTIME &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
+		</where>
 		GROUP BY UPR.BATCHNO
 	</select>
 	
 	<select id="getFcrtData2List" resultType="map" parameterType="java.util.Map">
 		SELECT upr.batchno,pro.MCode,pro.MATERICALCHDES,PRO.protype,pro.casepackage,pro.ITEMCASECONNECTION 
 		FROM PRODUCT pro,UPLOAD_PRODUCE_REPORT upr 
-		WHERE upr.fpcid = pro. ID 
+		WHERE upr.fpcid = pro.ID 
 		AND batchno IN <foreach collection="batchList" item="item" index="index"  
             open="(" close=")" separator=",">  
             #{item}  

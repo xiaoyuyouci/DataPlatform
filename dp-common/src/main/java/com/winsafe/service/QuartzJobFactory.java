@@ -70,6 +70,6 @@ public class QuartzJobFactory implements Job {
 				e.printStackTrace();
 			}
 		}
-		log.debug("任务名称 = [" + scheduleJob.getJobName() + "]----------启动成功");
+		log.info("任务名称 = [" + scheduleJob.getJobName() + "]----------启动成功");
 	}
 }

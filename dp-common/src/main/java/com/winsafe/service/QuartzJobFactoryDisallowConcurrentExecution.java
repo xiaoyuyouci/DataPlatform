@@ -72,6 +72,6 @@ public class QuartzJobFactoryDisallowConcurrentExecution implements Job {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("任务名称 = [" + scheduleJob.getJobName() + "]----------启动成功");
+		log.info("任务名称 = [" + scheduleJob.getJobName() + "]----------启动成功");
 	}
 }

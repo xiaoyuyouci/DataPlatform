@@ -1,8 +1,10 @@
 package com.winsafe.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,27 +115,153 @@ public class FactoryScheduleService {
 	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData2List(Map<String, Object> filter, DataSourceName datasource){
-		return factoryScheduleMapper.getFcrtData2List(filter);
+		List<String> batchList = (List<String>) filter.get("batchList");
+		if(batchList == null || batchList.size() == 0){
+			return new ArrayList<Map<String, Object>>();
+		}
+		
+		int step = 1000;
+		if(batchList.size() <= step){
+			return factoryScheduleMapper.getFcrtData2List(filter);
+		}
+		else{
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			int a = batchList.size() / step;
+			int b = batchList.size() % step;
+			int fromIndex = 0;
+			for(int i=0; i< a; i++){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+step-1));
+				list.addAll(factoryScheduleMapper.getFcrtData2List(filter));
+				fromIndex = fromIndex + step;
+			}
+			if(b > 0){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+b-1));
+				list.addAll(factoryScheduleMapper.getFcrtData2List(filter));
+				fromIndex = fromIndex + b;
+			}
+			return list;
+		}
 	}
 	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData3List(Map<String, Object> filter, DataSourceName datasource){
-		return factoryScheduleMapper.getFcrtData3List(filter);
+		
+		List<String> batchList = (List<String>) filter.get("batchList");
+		if(batchList == null || batchList.size() == 0){
+			return new ArrayList<Map<String, Object>>();
+		}
+		
+		int step = 1000;
+		if(batchList.size() <= step){
+			return factoryScheduleMapper.getFcrtData3List(filter);
+		}
+		else{
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			int a = batchList.size() / step;
+			int b = batchList.size() % step;
+			int fromIndex = 0;
+			for(int i=0; i< a; i++){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+step-1));
+				list.addAll(factoryScheduleMapper.getFcrtData3List(filter));
+				fromIndex = fromIndex + step;
+			}
+			if(b > 0){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+b-1));
+				list.addAll(factoryScheduleMapper.getFcrtData3List(filter));
+				fromIndex = fromIndex + b;
+			}
+			return list;
+		}
 	}
 	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData4List(Map<String, Object> filter, DataSourceName datasource){
-		return factoryScheduleMapper.getFcrtData4List(filter);
+		List<String> batchList = (List<String>) filter.get("batchList");
+		if(batchList == null || batchList.size() == 0){
+			return new ArrayList<Map<String, Object>>();
+		}
+		
+		int step = 1000;
+		if(batchList.size() <= step){
+			return factoryScheduleMapper.getFcrtData4List(filter);
+		}
+		else{
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			int a = batchList.size() / step;
+			int b = batchList.size() % step;
+			int fromIndex = 0;
+			for(int i=0; i< a; i++){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+step-1));
+				list.addAll(factoryScheduleMapper.getFcrtData4List(filter));
+				fromIndex = fromIndex + step;
+			}
+			if(b > 0){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+b-1));
+				list.addAll(factoryScheduleMapper.getFcrtData4List(filter));
+				fromIndex = fromIndex + b;
+			}
+			return list;
+		}
 	}
 	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData5List(Map<String, Object> filter, DataSourceName datasource){
-		return factoryScheduleMapper.getFcrtData5List(filter);
+		List<String> batchList = (List<String>) filter.get("batchList");
+		if(batchList == null || batchList.size() == 0){
+			return new ArrayList<Map<String, Object>>();
+		}
+		
+		int step = 1000;
+		if(batchList.size() <= step){
+			return factoryScheduleMapper.getFcrtData5List(filter);
+		}
+		else{
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			int a = batchList.size() / step;
+			int b = batchList.size() % step;
+			int fromIndex = 0;
+			for(int i=0; i< a; i++){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+step-1));
+				list.addAll(factoryScheduleMapper.getFcrtData5List(filter));
+				fromIndex = fromIndex + step;
+			}
+			if(b > 0){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+b-1));
+				list.addAll(factoryScheduleMapper.getFcrtData5List(filter));
+				fromIndex = fromIndex + b;
+			}
+			return list;
+		}
 	}
 	
 	@DataSourceAnnotation
 	public List<Map<String, Object>> getFcrtData6List(Map<String, Object> filter, DataSourceName datasource){
-		return factoryScheduleMapper.getFcrtData6List(filter);
+		List<String> batchList = (List<String>) filter.get("batchList");
+		if(batchList == null || batchList.size() == 0){
+			return new ArrayList<Map<String, Object>>();
+		}
+		
+		int step = 1000;
+		if(batchList.size() <= step){
+			return factoryScheduleMapper.getFcrtData6List(filter);
+		}
+		else{
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			int a = batchList.size() / step;
+			int b = batchList.size() % step;
+			int fromIndex = 0;
+			for(int i=0; i< a; i++){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+step-1));
+				list.addAll(factoryScheduleMapper.getFcrtData6List(filter));
+				fromIndex = fromIndex + step;
+			}
+			if(b > 0){
+				filter.put("batchList", batchList.subList(fromIndex, fromIndex+b-1));
+				list.addAll(factoryScheduleMapper.getFcrtData6List(filter));
+				fromIndex = fromIndex + b;
+			}
+			return list;
+		}
 	}
 	
 	@DataSourceAnnotation

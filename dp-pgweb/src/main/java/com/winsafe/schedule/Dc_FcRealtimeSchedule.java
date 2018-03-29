@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.winsafe.datasource.DataSourceName;
+import com.winsafe.model.Resource;
 import com.winsafe.service.FactoryScheduleService;
+import com.winsafe.service.ResourceService;
 import com.winsafe.utils.DateUtil;
 
 
@@ -25,8 +29,13 @@ import com.winsafe.utils.DateUtil;
 @Component
 public class Dc_FcRealtimeSchedule {
 
+	private static final Logger logger = LogManager.getLogger(Dc_FcRealtimeSchedule.class);
+	
 	@Autowired
 	private FactoryScheduleService service;
+	
+	@Autowired
+	private ResourceService resourceService;
 	
 	/**
 	 * 工厂实时状态 监测一个时间段是否有上传数据（设定为2个小时）
@@ -34,7 +43,7 @@ public class Dc_FcRealtimeSchedule {
 	//@Scheduled(cron="0 0 0/2 * * ?")
 	public void updateRealtime(){
 		
-		String start = DateUtil.formatDatetime(DateUtil.addHour(DateUtil.now(), -2));
+		String start = DateUtil.formatDatetime(DateUtil.addHour(DateUtil.now(), getStartDateOffset()));
 		String end = DateUtil.formatDatetime(DateUtil.now());
 		
 		//String start = "2017-05-11 09:19:04";
@@ -144,7 +153,7 @@ public class Dc_FcRealtimeSchedule {
 				fr.setProductname(getStringVal(map.get("MATERICALCHDES")));//产品名称
 				fr.setCkqrnum1(getStringVal(map.get("CKQRNUM1")));//生产计划item数量
 				if(StringUtils.isNotBlank(fr.getCkqrnum1())){
-					hn = Long.valueOf(value);//计划生产item数量
+					hn = Long.valueOf(fr.getCkqrnum1());//计划生产item数量
 				}
 				
 				fr.setElqrnum1(getStringVal(map.get("ELQRNUM1")));//item剔除数量
@@ -157,8 +166,7 @@ public class Dc_FcRealtimeSchedule {
 				
 				fr.setContext1("");
 				
-				value = String.valueOf(map.get("CKQRNUM2"));//生产计划case数量
-				fr.setCkqrnum2(getStringVal(map.get("CKQRNUM2")));
+				fr.setCkqrnum2(getStringVal(map.get("CKQRNUM2")));//生产计划case数量
 				if(StringUtils.isNotBlank(fr.getCkqrnum2())){
 					mn = Long.valueOf(fr.getCkqrnum2());//计划生产case数量
 				}
@@ -171,7 +179,6 @@ public class Dc_FcRealtimeSchedule {
 				if(StringUtils.isNotBlank(fr.getCount2())){
 					pn = Long.valueOf(fr.getCount2());//实际case数量
 				}
-				value = String.valueOf(map.get("BATCHNO"));//实际收到case数量
 				fr.setContext2(fr.getCount2());
 				
 				//item合格率K/H
@@ -200,7 +207,6 @@ public class Dc_FcRealtimeSchedule {
 				}
 				fr.setReal_package(value);
 				
-				value = String.valueOf(map.get("CASEPACKAGE"));//masterdata中箱瓶比例
 				fr.setCase_package(getStringVal(map.get("CASEPACKAGE")));//masterdata中箱瓶比例
 				
 				//比例是否标准
@@ -218,7 +224,7 @@ public class Dc_FcRealtimeSchedule {
 				value = "";
 			}
 			//先完成新上传的批次号的更新
-			System.out.println("Finish the first update dc_factoryrealtime data!");
+			logger.debug("Finish the first update dc_farealtime data!");
 			
 			//更新暂停中的批次号的数量变更，如果数量发生改变则在这两个小时之内也有新的数据上传
 			List<FactoryRealtime> frList = service.getFaRealtimeIfStatusIsSuspended(primary);
@@ -315,17 +321,16 @@ public class Dc_FcRealtimeSchedule {
 							
 							fr.setCkqrnum1(getStringVal(map2.get("CKQRNUM1")));//生产计划item数量
 							if(StringUtils.isNotBlank(fr.getCkqrnum1())){
-								hn = Long.valueOf(value);//计划生产item数量
+								hn = Long.valueOf(fr.getCkqrnum1());//计划生产item数量
 							}
 							
 							fr.setElqrnum1(getStringVal(map2.get("CKQELQRNUM1RNUM1")));//item剔除数量
 							
 							fr.setScannum1(getStringVal(map2.get("SCANNUM1")));//item本地数量
 							
-							value = String.valueOf(map2.get("COUNT1"));//实际item数量
 							fr.setCount1(getStringVal(map2.get("COUNT1")));
 							if(StringUtils.isNotBlank(fr.getCount1())){
-								kn = Long.valueOf(value);//实际item数量
+								kn = Long.valueOf(fr.getCount1());//实际item数量
 							}
 							
 //							value = String.valueOf(map.get("BATCHNO"));//实际收到item数量
@@ -333,7 +338,7 @@ public class Dc_FcRealtimeSchedule {
 							
 							fr.setCkqrnum2(getStringVal(map2.get("CKQRNUM2")));//生产计划case数量
 							if(StringUtils.isNotBlank(fr.getCkqrnum2())){
-								mn = Long.valueOf(value);//计划生产case数量
+								mn = Long.valueOf(fr.getCkqrnum2());//计划生产case数量
 							}
 							
 							fr.setElqrnum2(getStringVal(map2.get("ELQRNUM2")));//case剔除数量
@@ -342,7 +347,7 @@ public class Dc_FcRealtimeSchedule {
 							
 							fr.setCount2(getStringVal(map2.get("COUNT2")));
 							if(StringUtils.isNotBlank(fr.getCount2())){
-								pn = Long.valueOf(value);//实际case数量
+								pn = Long.valueOf(fr.getCount2());//实际case数量
 							}
 //							value = String.valueOf(map.get("BATCHNO"));//实际收到case数量
 							fr.setContext2(fr.getCount2());
@@ -390,7 +395,7 @@ public class Dc_FcRealtimeSchedule {
 							}
 							fr.setIs_true(value);
 							service.updateFaRealtime2(fr, primary);
-							System.out.println("Finish update number!");
+							logger.debug("Finish update number!");
 						}
 						flag = false;
 					}
@@ -427,5 +432,16 @@ public class Dc_FcRealtimeSchedule {
 		else {
 			return String.valueOf(obj);
 		}
+	}
+	
+	private int getStartDateOffset(){
+	   	Resource record = new Resource();
+    	record.setSname("dc_fcRealtimeSchedule");
+    	record.setSkey("startDateOffset");
+    	Resource r = resourceService.selectBySnameAndSkey(record);
+    	if(r == null || StringUtils.isBlank(r.getSvalue())){
+    		return -2;
+    	}
+    	return Integer.valueOf(r.getSvalue());
 	}
 }

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,8 @@ import com.winsafe.utils.DateUtil;
 @Component
 public class Dc_FcDailySchedule {
 
+	private static final Logger logger = LogManager.getLogger(Dc_FcDailySchedule.class);
+	
 	@Autowired
 	private FactoryScheduleService service;
 	
@@ -250,7 +254,7 @@ public class Dc_FcDailySchedule {
 				value = "Y";
 			}
 			sql = sql +"'"+value+"','"+case_item+"')";
-			System.out.println(sql);
+			logger.debug(sql);
 			filter.clear();
 			filter.put("sql", sql);
 			service.insertListBySql(filter, new DataSourceName("primary"));
