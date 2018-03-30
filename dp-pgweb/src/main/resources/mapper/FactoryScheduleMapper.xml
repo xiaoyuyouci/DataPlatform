@@ -73,11 +73,11 @@
 	</select>
 
 	<select id="getFcRealtimeBatchs" resultType="map" parameterType="java.util.Map">
-		SELECT DISTINCT upr.BATCHNO, max(UPR.OPTTIME) as up_time 
+		SELECT DISTINCT upr.BATCHNO, max(upr.MAKEDATE) as up_time 
 		FROM UPLOAD_PRODUCE_REPORT upr 
 		<where>
-			<if test="start != null and start !=''"> and upr.OPTTIME &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
-			<if test="end != null and end !=''"> and upr.OPTTIME &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
+			<if test="start != null and start !=''"> and upr.MAKEDATE &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
+			<if test="end != null and end !=''"> and upr.MAKEDATE &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
 		</where>
 		GROUP BY UPR.BATCHNO
 	</select>
@@ -97,8 +97,8 @@
 	SELECT upri.batchno,upri.prodate,upri.plantcode,upri.linecode,PS.SORTNAME,COUNT(upri.batchno) count1 
 	FROM PRODUCT_STRUCT ps,UPLOAD_PRODUCE_REPORT_ITEM upri,PRODUCT pro
     WHERE upri.fpcid = pro.ID AND pro.PSID = PS.STRUCTCODE 
-    <if test="start != null and start !=''"> AND  upri.OPTTIME &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
-	<if test="end != null and end !=''"> and upri.OPTTIME &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
+    <if test="start != null and start !=''"> AND  upri.MAKEDATE &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
+	<if test="end != null and end !=''"> and upri.MAKEDATE &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
     <if test="batchList != null and batchList.size()>0">
     	AND upri.batchno IN <foreach collection="batchList" item="item" index="index"  
             open="(" close=")" separator=",">  
@@ -127,8 +127,8 @@
 		SELECT upr.batchno,upr.prodate,upr.plantcode,upr.linecode,PS.SORTNAME,COUNT(upr.batchno) count2
   		FROM PRODUCT_STRUCT ps,UPLOAD_PRODUCE_REPORT upr,PRODUCT pro 
   		WHERE upr.fpcid = pro.ID AND pro.PSID = PS.STRUCTCODE
-      		<if test="start != null and start !=''"> AND upr.OPTTIME &gt;= to_date(#{start, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')  </if>
-      		<if test="end != null and end !=''"> and upr.OPTTIME &lt;= to_date(#{end, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')  </if>
+      		<if test="start != null and start !=''"> AND upr.MAKEDATE &gt;= to_date(#{start, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')  </if>
+      		<if test="end != null and end !=''"> and upr.MAKEDATE &lt;= to_date(#{end, jdbcType=VARCHAR}, 'yyyy-MM-dd hh24:mi:ss')  </if>
   			<if test="batchList != null and batchList.size()>0">
   				AND upr.batchno IN 
   				<foreach collection="batchList" item="item" index="index" open="(" close=")" separator=",">  
