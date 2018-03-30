@@ -76,6 +76,7 @@
 		SELECT DISTINCT upr.BATCHNO, max(upr.MAKEDATE) as up_time 
 		FROM UPLOAD_PRODUCE_REPORT upr 
 		<where>
+			<if test="lastId != null"> and upr.ID &gt;= #{lastId, jdbcType=INTEGER}</if>
 			<if test="start != null and start !=''"> and upr.MAKEDATE &gt;= to_date(#{start, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss')</if>
 			<if test="end != null and end !=''"> and upr.MAKEDATE &lt;= to_date(#{end, jdbcType=VARCHAR},'yyyy-MM-dd hh24:mi:ss') </if>
 		</where>
@@ -179,6 +180,10 @@
 	 
 	<select id="getFaRealtimeIfStatusIsSuspended" resultType="com.winsafe.schedule.FactoryRealtime" parameterType="java.util.Map">
 		select * from dc_farealtime where status = 0 and length(batchno) > 0
+	</select>
+	
+	<select id="getMaxIdOfUploadProduceReport" resultType="java.lang.Long">
+		select max(id) as id from UPLOAD_PRODUCE_REPORT
 	</select>
 	
 </mapper>

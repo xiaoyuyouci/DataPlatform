@@ -62,7 +62,7 @@ public class UpdBnoTmpScheduleService {
 		
 		Map<String, Object> filter = new HashMap<String, Object>();
 		
-		int step = 5000;
+		int step = 1000;
 		if(list.size() <= step){
 			filter.put("list", list);
 			insertCount += updBnoTmpScheduleMapper.insertBnoTmp(filter);

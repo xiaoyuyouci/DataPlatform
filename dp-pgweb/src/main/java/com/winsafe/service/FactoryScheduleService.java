@@ -286,4 +286,14 @@ public class FactoryScheduleService {
 	public List<FactoryRealtime> getFaRealtimeIfStatusIsSuspended(DataSourceName datasource){
 		return factoryScheduleMapper.getFaRealtimeIfStatusIsSuspended();
 	}
+	
+	/**
+	 * 从DC的UPLOAD_PRODUCE_REPORT表获取最大Id
+	 * @param filter
+	 * @return
+	 */
+	@DataSourceAnnotation
+	public Long getMaxIdOfUploadProduceReport(DataSourceName datasource){
+		return factoryScheduleMapper.getMaxIdOfUploadProduceReport();
+	}
 }

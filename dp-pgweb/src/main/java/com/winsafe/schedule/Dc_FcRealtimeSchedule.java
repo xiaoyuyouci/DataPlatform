@@ -40,25 +40,39 @@ public class Dc_FcRealtimeSchedule {
 	/**
 	 * 工厂实时状态 监测一个时间段是否有上传数据（设定为2个小时）
 	 */
-	//@Scheduled(cron="0 0 0/2 * * ?")
 	public void updateRealtime(){
-		
-		String start = DateUtil.formatDatetime(DateUtil.addHour(DateUtil.now(), getStartDateOffset()));
-		String end = DateUtil.formatDatetime(DateUtil.now());
-		
-		//String start = "2017-05-11 09:19:04";
-		//String end = "2017-05-11 11:19:04";
 		
 		DataSourceName pgdc = new DataSourceName("pgdc");
 		DataSourceName primary = new DataSourceName("primary");
 		
+		Resource record = new Resource();
+		record.setSname("dc_fcRealtimeSchedule");
+		record.setSkey("lastid");
+		Resource r = resourceService.selectBySnameAndSkey(record);
+		if(r == null){
+			logger.error("resource[sname='dc_fcRealtimeSchedule',skey='lastid'] not exists.");
+			return;
+		}
+		Long lastId = StringUtils.isBlank(r.getSvalue())? 0: Long.valueOf(r.getSvalue());;
+		
+		Long maxId = service.getMaxIdOfUploadProduceReport(pgdc);
+		if(maxId == null || maxId <= lastId){
+			logger.info("there is not new data in UPLOAD_PRODUCE_REPORT.");
+			return;
+		}
+		
 		//用来存储最后拼凑好的数组
 		Map<String,Map<String,Object>> result = new HashMap<String,Map<String,Object>>();
+		//String start = DateUtil.formatDatetime(DateUtil.addHour(DateUtil.now(), getStartDateOffset()));
+		//String end = DateUtil.formatDatetime(DateUtil.now());
+		String start = null;
+		String end = null;
 		
 		//第一次查询，查询改时间段内批次最后一次上传时间
 		Map<String, Object> filter = new HashMap<String, Object>();
 		filter.put("start", start);
 		filter.put("end", end);
+		filter.put("lastId", lastId);
 		List<Map<String, Object>> data = service.getFcRealtimeBatchs(filter, pgdc);
 
 		if(data !=null && data.size()>0){
@@ -400,9 +414,14 @@ public class Dc_FcRealtimeSchedule {
 						flag = false;
 					}
 				}
-				
 			}
 		}
+		
+		Resource res = new Resource();
+		res.setId(r.getId());
+		res.setModificationTime(DateUtil.now());
+		res.setSvalue(String.valueOf(maxId));
+		resourceService.updateByPrimaryKeySelective(res);
 	}
 	
 	private boolean isSameChars (String str) throws IllegalArgumentException {

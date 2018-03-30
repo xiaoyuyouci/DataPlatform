@@ -22,3 +22,4 @@ insert into resource(sname, skey, creationtime, svalue, level, memo) values('upd
 insert into resource(sname, skey, creationtime, svalue, level, memo) values('dc_qrCodeUsageRatio', 'startDateOffset', now(), '-6', 0, '从DC数据库获取QR码文件申请日志的开始查找时间限制。单位月份。');
 insert into resource(sname, skey, creationtime, svalue, level, memo) values('scheduleJob', 'runOnStart', now(), '0', 0, '定时任务。是否启动服务时运行任务。');
 insert into resource(sname, skey, creationtime, svalue, level, memo) values('dc_fcRealtimeSchedule', 'startDateOffset', now(), '-2', 0, '从DC数据库获取DC工厂定时任务的批次的开始查找时间限制。单位小时。');
+insert into resource(sname, skey, creationtime, svalue, level, memo) values('dc_fcRealtimeSchedule', 'lastid', now(), '0', 0, '从DC数据库UPLOAD_PRODUCE_REPORT表数据，已用的ID。');

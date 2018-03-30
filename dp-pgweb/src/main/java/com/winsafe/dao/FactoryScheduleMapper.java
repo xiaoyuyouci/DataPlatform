@@ -67,4 +67,11 @@ public interface FactoryScheduleMapper {
 	public int updateFaRealtime(FactoryRealtime obj);
 	public int updateFaRealtime2(FactoryRealtime obj);
 	public List<FactoryRealtime> getFaRealtimeIfStatusIsSuspended();
+	
+	/**
+	 * 从DC的UPLOAD_PRODUCE_REPORT表获取最大Id
+	 * @param filter
+	 * @return
+	 */
+	public Long getMaxIdOfUploadProduceReport();
 }
