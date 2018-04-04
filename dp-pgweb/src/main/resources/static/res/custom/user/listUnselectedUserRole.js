@@ -1,6 +1,14 @@
 var selected = [];
 $(document).ready(function() {
-	$('#dataTables-unselectedUserRole').DataTable({
+	var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	var table = $('#dataTables-unselectedUserRole')
+	.on( 'init.dt', function () {
+        layer.close(searchLayerIndex);
+    } )
+    .on( 'page.dt', function () {
+    	searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	} )
+	.DataTable({
 		responsive : true,
 		serverSide : true,
 		searching : true,
@@ -26,6 +34,13 @@ $(document).ready(function() {
             }
         }
 	});
+	table.on( 'draw', function () {
+	    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+	    if(searchLayerIndex){
+	    	layer.close(searchLayerIndex);
+	    	searchLayerIndex = null;
+	    }
+	} );
 	
 	$('#dataTables-unselectedUserRole tbody').on('click', 'tr', function () {
         var id = $('#dataTables-unselectedUserRole').DataTable().row($(this)).data().id;

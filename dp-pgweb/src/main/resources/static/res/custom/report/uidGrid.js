@@ -39,7 +39,19 @@ $(document).ready(
 );
 
 function initFcDailyGrid(){
-	$('#table_uidGrid').DataTable({
+    //console.log( 'Table initialisation start: '+new Date().getTime() );
+	var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	var table = $('#table_uidGrid')
+	.on( 'init.dt', function () {
+		//console.log( ' your table has fully been initialised, data loaded and drawn: '+new Date().getTime() );
+        layer.close(searchLayerIndex);
+        searchLayerIndex = null;
+    } )
+    .on( 'page.dt', function () {
+    	//console.log( 'table\'s paging state changes: '+new Date().getTime() );
+    	searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	} )
+	.DataTable({
 		"sScrollX": "100%",
 		"scrollY": "400px",
 		"scrollCollapse": "true",
@@ -237,4 +249,11 @@ function initFcDailyGrid(){
 					}
 		]
 	});
+	table.on( 'draw', function () {
+	    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+	    if(searchLayerIndex){
+	    	layer.close(searchLayerIndex);
+	    	searchLayerIndex = null;
+	    }
+	} );
 }

@@ -13,7 +13,19 @@ $(document).ready(
 );
 
 function initFcRealtimeGrid() {
-	var table = $('#table_dcRealtimeGrid').DataTable({
+    //console.log( 'Table initialisation start: '+new Date().getTime() );
+	var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	var table = $('#table_dcRealtimeGrid')
+	.on( 'init.dt', function () {
+		//console.log( ' your table has fully been initialised, data loaded and drawn: '+new Date().getTime() );
+        layer.close(searchLayerIndex);
+        searchLayerIndex = null;
+    } )
+    .on( 'page.dt', function () {
+    	//console.log( 'table\'s paging state changes: '+new Date().getTime() );
+    	searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	} )
+    .DataTable({
 		"autoWidth": true,//默认为true
 		"scrollX": true,
 		"scrollY": "400px",
@@ -104,6 +116,13 @@ function initFcRealtimeGrid() {
 					}
 		]
 	});
+	table.on( 'draw', function () {
+	    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+	    if(searchLayerIndex){
+	    	layer.close(searchLayerIndex);
+	    	searchLayerIndex = null;
+	    }
+	} );
 }
 
 //计算数量相加是否正确

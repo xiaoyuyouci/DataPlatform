@@ -7,7 +7,19 @@ $(document).ready(
 );
 
 function initDcQrQuery(){
-	$('#table_dcQrQuery').DataTable({
+    //console.log( 'Table initialisation start: '+new Date().getTime() );
+	var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	var table = $('#table_dcQrQuery')
+	.on( 'init.dt', function () {
+		//console.log( ' your table has fully been initialised, data loaded and drawn: '+new Date().getTime() );
+        layer.close(searchLayerIndex);
+        searchLayerIndex = null;
+    } )
+    .on( 'page.dt', function () {
+    	//console.log( 'table\'s paging state changes: '+new Date().getTime() );
+    	searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	} )
+    .DataTable({
 		"sScrollX": "100%",
 		"scrollY": "400px",
 		"scrollCollapse": "true",
@@ -18,6 +30,13 @@ function initDcQrQuery(){
 		paging: false,
 		info: false
 	});
+	table.on( 'draw', function () {
+	    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+	    if(searchLayerIndex){
+	    	layer.close(searchLayerIndex);
+	    	searchLayerIndex = null;
+	    }
+	} );
 }
 
 function bindSearchBthOnclick(){
@@ -36,7 +55,17 @@ function bindSearchBthOnclick(){
 }
 
 function initDcPast6Month(){
-	$('#table_dcPast6Month').DataTable({
+	var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	var table = $('#table_dcPast6Month')
+	.on( 'init.dt', function () {
+		//console.log( ' your table has fully been initialised, data loaded and drawn: '+new Date().getTime() );
+        layer.close(searchLayerIndex);
+        searchLayerIndex = null;
+    } )
+    .on( 'page.dt', function () {
+    	//console.log( 'table\'s paging state changes: '+new Date().getTime() );
+    	searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	} ).DataTable({
 		"scrollX": true,
 		"scrollY": "400px",
 		"scrollCollapse": "true",
@@ -48,10 +77,10 @@ function initDcPast6Month(){
 		ordering:  false,
 		//"lengthMenu": [[5, 10, 15, 20], [5, 10, 15, 20]],
 		dom : 'frt<"col-sm-4"i><"col-sm-2"l><"col-sm-6"p><"clear">',
-		"processing": true,
-		"language": {
-			 "processing": "数据正在查询中..."
-	      },
+		//"processing": true,
+		//"language": {
+		//	 "processing": "数据正在查询中..."
+	    //  },
 		ajax : {
 			type : 'post',
 			url : '/report/ajaxGetDcQrCodeUsageRate',
@@ -76,6 +105,13 @@ function initDcPast6Month(){
 			    { "data": "outcount" }
 	    ]
 	});
+	table.on( 'draw', function () {
+	    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+	    if(searchLayerIndex){
+	    	layer.close(searchLayerIndex);
+	    	searchLayerIndex = null;
+	    }
+	} );
 }
 
 function updateLabelValToSearching(){

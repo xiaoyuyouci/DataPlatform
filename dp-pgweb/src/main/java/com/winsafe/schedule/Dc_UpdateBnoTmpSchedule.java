@@ -56,15 +56,16 @@ public class Dc_UpdateBnoTmpSchedule {
 		//从upload_idcode_temporary获取数据，存入dc_bnotmp并更新resource中的值
 		long step = 10000;
 		Map<String, Object> filter = new HashMap<String, Object>();
-		while(lastId < maxId){
-			long nextLastId = (lastId + step < maxId)? (lastId + step): (maxId);
-			filter.put("minId", lastId);
+		long minId = lastId + 1;
+		while(minId <= maxId){
+			long nextLastId = (minId + step < maxId)? (minId + step): (maxId);
+			filter.put("minId", minId);
 			filter.put("maxId", nextLastId);
 			List<Map<String, Object>> list = updBnoTmpScheduleService.selectBnoAndPbatchFromUploadIdcodeTemporary(filter, pgdc);
 			r.setSvalue(String.valueOf(nextLastId));
 			int count = updBnoTmpScheduleService.updBnoTmp(list, r);
 			logger.debug("实际上插入"+count+"条记录，应该插入"+list.size()+"条记录。最后的ID为"+nextLastId);
-			lastId = nextLastId;
+			minId = nextLastId;
 		}
 	}
 }

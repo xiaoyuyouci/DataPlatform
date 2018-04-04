@@ -2,11 +2,20 @@ var addUserLayerIndex = null;
 var updUserLayerIndex = null;
 var userRoleLayerIndex = null;
 
-$(document)
-		.ready(
-				function() {
-					$('#dataTables-example')
-							.DataTable(
+$(document).ready(
+	function() {
+		var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+		var table = $('#dataTables-example')
+		.on( 'init.dt', function () {
+		//console.log( ' your table has fully been initialised, data loaded and drawn: '+new Date().getTime() );
+        layer.close(searchLayerIndex);
+        searchLayerIndex = null;
+    } )
+    .on( 'page.dt', function () {
+    	//console.log( 'table\'s paging state changes: '+new Date().getTime() );
+    	searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	} )
+		.DataTable(
 									{
 										responsive : true,
 										serverSide : true,
@@ -56,6 +65,13 @@ $(document)
 													"targets" : 3
 												} ]
 									});
+		table.on( 'draw', function () {
+		    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+		    if(searchLayerIndex){
+		    	layer.close(searchLayerIndex);
+		    	searchLayerIndex = null;
+		    }
+		} );
 				});
 
 function search() {

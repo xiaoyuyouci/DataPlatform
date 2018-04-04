@@ -32,9 +32,19 @@ function getData(){
 }
 
 function drawTable(data){
-	//console.log(data);
-	//console.log(data.part1);
-	var table = $('#table_ppStatisticsGrid').DataTable({
+    //console.log( 'Table initialisation start: '+new Date().getTime() );
+	var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	var table = $('#table_ppStatisticsGrid')
+	.on( 'init.dt', function () {
+		//console.log( ' your table has fully been initialised, data loaded and drawn: '+new Date().getTime() );
+        layer.close(searchLayerIndex);
+        searchLayerIndex = null;
+    } )
+    .on( 'page.dt', function () {
+    	//console.log( 'table\'s paging state changes: '+new Date().getTime() );
+    	searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	} )
+	.DataTable({
 		"sScrollX": "100%",
 		"scrollY": "400px",
 		"scrollCollapse": "true",
@@ -80,6 +90,13 @@ function drawTable(data){
 	table.rows.add(data.part1).draw();
 	//console.log(table.cell(0,5).node());
 	//$(table.cell(0,5).node()).attr('rowspan', 2);
+	table.on( 'draw', function () {
+	    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+	    if(searchLayerIndex){
+	    	layer.close(searchLayerIndex);
+	    	searchLayerIndex = null;
+	    }
+	} );
 }
 
 /*function initFcDailyGrid(){

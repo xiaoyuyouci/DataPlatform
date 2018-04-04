@@ -1,6 +1,5 @@
 $(document).ready(function() {
 		$("#addRoleForm button:submit").on('click', function(){
-			console.log('sds');
 			$("#addRoleForm").validate({
 				submitHandler:function(form){
 					var searchLayerIndex = null;

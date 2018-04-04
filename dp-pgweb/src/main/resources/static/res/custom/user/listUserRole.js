@@ -1,7 +1,18 @@
 var addUserRoleLayerIndex = null;
 var selected = [];
 $(document).ready(function() {
-	$('#dataTables-userRole').DataTable({
+	var searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	var table = $('#dataTables-userRole')
+	.on( 'init.dt', function () {
+		//console.log( ' your table has fully been initialised, data loaded and drawn: '+new Date().getTime() );
+        layer.close(searchLayerIndex);
+        searchLayerIndex = null;
+    } )
+    .on( 'page.dt', function () {
+    	//console.log( 'table\'s paging state changes: '+new Date().getTime() );
+    	searchLayerIndex = layer.load(0, {shade: [0.2,'#fff']});
+	} )
+	.DataTable({
 		responsive : true,
 		serverSide : true,
 		searching : true,
@@ -27,6 +38,13 @@ $(document).ready(function() {
             }
         }
 	});
+	table.on( 'draw', function () {
+	    //console.log( 'Redraw occurred at: '+new Date().getTime() );
+	    if(searchLayerIndex){
+	    	layer.close(searchLayerIndex);
+	    	searchLayerIndex = null;
+	    }
+	} );
 	
 	$('#dataTables-userRole tbody').on('click', 'tr', function () {
         var id = $('#dataTables-userRole').DataTable().row($(this)).data().id;
